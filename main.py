@@ -14,7 +14,8 @@ class Bot(commands.Bot):
         # Initialise our Bot with our access token, prefix and a list of channels to join on boot...
         # prefix can be a callable, which returns a list of strings or a string...
         # initial_channels can also be a callable which returns a list of strings...
-        super().__init__(token=os.environ["TWITCH_ACCESS_TOKEN"], prefix=prefix, initial_channels=['orrrchan'])
+        super().__init__(token=os.environ["TWITCH_ACCESS_TOKEN"], prefix=prefix,
+                         initial_channels=os.environ["OBJECT"].split(','))
 
     async def event_ready(self):
         # Notify us when everything is ready!
