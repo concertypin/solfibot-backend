@@ -18,11 +18,11 @@ def get_score(uid: int) -> int:
         ref = db.reference(f'/data/{uid}').get()
         if (ref is None):
             return 0
-        return ref
+        return ref["score"]
     except:
         return 0
 
 
-def write_score(uid: int, score: int):
+def write_score(uid: int, score: int, username:str="idk"):
     ref = db.reference(f"/data/{uid}")
-    ref.set(score)
+    ref.set({"score":score,"name":username})

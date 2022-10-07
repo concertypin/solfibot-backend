@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
 
 from twitchio.ext import commands
 import twitch
@@ -15,36 +18,40 @@ class Bot(commands.Bot):
         # prefix can be a callable, which returns a list of strings or a string...
         # initial_channels can also be a callable which returns a list of strings...
         super().__init__(token=os.environ["TWITCH_ACCESS_TOKEN"], prefix=prefix,
-                         initial_channels=os.environ["OBJECT"].split(','))
+                         initial_channels=["orrrchan","badacredit"])
 
     async def event_ready(self):
         # Notify us when everything is ready!
         # We are logged in and ready to chat and use commands...
         print(f'Logged in as | {self.nick}')
         print(f'User id is | {self.user_id}')
+    
+    async def event_message(self, message):
+        if message.echo:
+            return
+        await self.handle_commands(message)
 
     @commands.command()
+    async def echo(self,ctx):
+        if(ctx.author.is_mod or ctx.author.name =="konfani"):
+            await ctx.send(ctx.message.content[6:])
+
+    @commands.command()
+    async def 춘추(self,ctx):
+        await ctx.send("늙고 병든 1842년생 회장")
+    @commands.command()
     async def add(self, ctx: commands.Context):
-        # Here we have a command hello, we can invoke our command with our prefix and command name
-        # e.g ?hello
-        # We can also give our commands aliases (different names) to invoke with.
-
-        # Send a hello back!
-        # Sending a reply back to the channel is easy... Below is an example.
-
         """
         ctx.author.name = sender's login id
         ctx.message.content = message string
         """
-        if (not ctx.author.is_mod):
+        if (not(ctx.author.is_mod or ctx.author.name=="konfani")):
             return
         print(ctx.message.content)
 
         try:
             username = str(ctx.message.content).split(" ")[1]
             score_offset = int(str(ctx.message.content).split(" ")[2])
-
-            print(username, score_offset)
 
             uid = twitch.username_to_uid(username)
             score = firebase.get_score(uid) + score_offset
@@ -53,13 +60,40 @@ class Bot(commands.Bot):
             return
 
         try:
-            firebase.write_score(uid, score)
+            firebase.write_score(uid, score,username)
         except:
             await ctx.send("...왜 버그가 났죠? 어? 어어?")
             return
 
         await ctx.send(f'이제 {twitch.uid_to_nickname(uid)}님의 학점은 {score}이에요!')
-
+    @commands.command()
+    async def evalAsDev(self,ctx):
+        if(ctx.author.name!="konfani"):
+            return
+        try:
+            a=eval(ctx.message.content[11:])
+            if(a is not None):
+                await ctx.send(str(a))
+            else:
+                await ctx.send("eval completed, but returned nothing.")
+        except Exception as e:
+            await ctx.send(str(e))
+    
+    @commands.command()
+    async def execAsDev(self,ctx):
+        if(ctx.author.name!="konfani"):
+            return
+        try:
+            a=exec(ctx.message.content[11:])
+            if(a is not None):
+                await ctx.send(str(a))
+            else:
+                await ctx.send("exec completed.")
+        except Exception as e:
+            await ctx.send(str(e))
+    @commands.command()
+    async def ping(self, ctx: commands.Context):
+        await ctx.send("?나임?")
 
 bot = Bot()
 bot.run()
