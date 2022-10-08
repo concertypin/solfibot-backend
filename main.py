@@ -1,28 +1,26 @@
 import os
+from twitchio.ext import commands
+import twitch
+import firebase
 from dotenv import load_dotenv
 
 load_dotenv(verbose=True)
-
-from twitchio.ext import commands
-import twitch
-
-import firebase
-
 prefix = '?'
+trustable=["konfani"]
 
+def is_trustable(ctx):
+    if(ctx.author.is_mod):
+        return True
+    if(ctx.author.name in trustable):
+        return True
+    return False
 
 class Bot(commands.Bot):
-
     def __init__(self):
-        # Initialise our Bot with our access token, prefix and a list of channels to join on boot...
-        # prefix can be a callable, which returns a list of strings or a string...
-        # initial_channels can also be a callable which returns a list of strings...
         super().__init__(token=os.environ["TWITCH_ACCESS_TOKEN"], prefix=prefix,
                          initial_channels=["orrrchan","badacredit"])
 
     async def event_ready(self):
-        # Notify us when everything is ready!
-        # We are logged in and ready to chat and use commands...
         print(f'Logged in as | {self.nick}')
         print(f'User id is | {self.user_id}')
     
@@ -33,7 +31,7 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def echo(self,ctx):
-        if(ctx.author.is_mod or ctx.author.name =="konfani"):
+        if(is_trustable(ctx)):
             await ctx.send(ctx.message.content[6:])
 
     @commands.command()
@@ -45,8 +43,9 @@ class Bot(commands.Bot):
         ctx.author.name = sender's login id
         ctx.message.content = message string
         """
-        if (not(ctx.author.is_mod or ctx.author.name=="konfani")):
+        if(not is_trustable(ctx)):
             return
+        
         print(ctx.message.content)
 
         try:
@@ -68,7 +67,7 @@ class Bot(commands.Bot):
         await ctx.send(f'이제 {twitch.uid_to_nickname(uid)}님의 학점은 {score}이에요!')
     @commands.command()
     async def evalAsDev(self,ctx):
-        if(ctx.author.name!="konfani"):
+        if(ctx.author.name not in trustable):
             return
         try:
             a=eval(ctx.message.content[11:])
@@ -81,7 +80,7 @@ class Bot(commands.Bot):
     
     @commands.command()
     async def execAsDev(self,ctx):
-        if(ctx.author.name!="konfani"):
+        if(ctx.author.name not in trustable):
             return
         try:
             a=exec(ctx.message.content[11:])
@@ -97,4 +96,3 @@ class Bot(commands.Bot):
 
 bot = Bot()
 bot.run()
-# bot.run() is blocking and will stop execution of any below code here until stopped or closed.
