@@ -4,10 +4,16 @@ import os
 from twitchio.ext import commands
 import twitch
 import firebase
+<<<<<<< HEAD
 import sys
 import multiprocessing as mp
 import asyncio
 import re
+=======
+from dotenv import load_dotenv
+import multiprocessing as mp
+import asyncio
+>>>>>>> 60b4565 (printing command completed)
 
 trim_paimon=re.compile(" HungryPaimon")
 registry_parse=re.compile(r"`[^`]*`")
@@ -31,6 +37,7 @@ class Bot(commands.Bot):
         print(f'Logged in as | {self.nick}')
         print(f'User id is | {self.user_id}')
 
+<<<<<<< HEAD
     def command_handle(self,msg:str,channel_name:str):
         channel_uid=twitch.username_to_uid(channel_name)
         commands_dict=firebase.read_commands(channel_uid)
@@ -66,6 +73,27 @@ class Bot(commands.Bot):
                 await message.channel.send(res)
         
         await self.handle_commands(message)
+=======
+    async def event_message(self, message):
+        if message.echo:
+            return 
+        if not message.content.startswith(prefix):
+            return
+        
+        def worker():
+            channel_uid=twitch.username_to_uid(message.channel.name)
+            commands_dict=firebase.read_commands(channel_uid)
+
+            command=message.content[len(prefix):]
+            response=commands_dict.get(command)
+            if(response is None):
+                return
+            
+            asyncio.run(message.channel.send(response)) 
+
+        p = mp.Process(name=f"handler of {message.content.split(' ')[0]}", target=worker)
+        p.start()
+>>>>>>> 60b4565 (printing command completed)
 
     @commands.command()
     async def 등록(self,ctx):
