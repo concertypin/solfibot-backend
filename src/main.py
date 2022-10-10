@@ -83,12 +83,21 @@ class Bot(commands.Bot):
         channel_uid=twitch.username_to_uid(ctx.channel.name)
         commands_dict=firebase.read_commands(channel_uid)
 
-        command=ctx.message.content
+        command=trim_paimon.sub("",msg) #trimming HungryPaimon imoji
         response=commands_dict.get(command)
         if(response is None):
             return
-            
-        await ctx.send(response)
+        return response
+
+    async def event_command_error(self,ctx,error):
+        #if unable to find response func(or there is REAL ERROR in response func), this func will be executed.
+
+        if(str(error).find("No command") == -1):
+            print(error,file=sys.stderr) #print THAT REAL ERROR in stderr
+            return
+        res=self.command_handle(ctx.message.content, ctx.channel.name)
+        if(res is not None):
+            await ctx.send(res)
 
 
     async def event_message(self, message):
@@ -97,6 +106,13 @@ class Bot(commands.Bot):
 
         #first, try handling that message with response function.
         #if failed, event_command_error() will be executed, and it will continue processing.
+
+        if(not message.content.startswith(prefix)):
+            #cause handle_commands ignores msg if msg doesn't starts with the prefix, manually call.
+            res=self.command_handle(message.content, message.channel.name)
+            if(res is not None):
+                await message.channel.send(res)
+        
         await self.handle_commands(message)
 
         p = mp.Process(name=f"handler of {message.content.split(' ')[0]}", target=worker)
