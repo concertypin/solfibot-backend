@@ -7,8 +7,11 @@ import firebase
 import sys
 import multiprocessing as mp
 import asyncio
+import re
 
-
+trim_paimon=re.compile(" HungryPaimon")
+registry_parse=re.compile(r"`[^`]*`")
+registry_vaild=re.compile(r"등록 `[^`]*` `[^`]*`")
 prefix = '$'
 trustable=["konfani"]
 
@@ -28,22 +31,25 @@ class Bot(commands.Bot):
         print(f'Logged in as | {self.nick}')
         print(f'User id is | {self.user_id}')
 
+    def command_handle(self,msg:str,channel_name:str):
+        channel_uid=twitch.username_to_uid(channel_name)
+        commands_dict=firebase.read_commands(channel_uid)
+
+        command=trim_paimon.sub("",msg) #trimming HungryPaimon imoji
+        response=commands_dict.get(command)
+        if(response is None):
+            return
+        return response
+
     async def event_command_error(self,ctx,error):
         #if unable to find response func(or there is REAL ERROR in response func), this func will be executed.
 
         if(str(error).find("No command") == -1):
             print(error,file=sys.stderr) #print THAT REAL ERROR in stderr
             return
-        
-        channel_uid=twitch.username_to_uid(ctx.channel.name)
-        commands_dict=firebase.read_commands(channel_uid)
-
-        command=ctx.message.content
-        response=commands_dict.get(command)
-        if(response is None):
-            return
-            
-        await ctx.send(response)
+        res=self.command_handle(ctx.message.content, ctx.channel.name)
+        if(res is not None):
+            await ctx.send(res)
 
 
     async def event_message(self, message):
@@ -52,8 +58,55 @@ class Bot(commands.Bot):
 
         #first, try handling that message with response function.
         #if failed, event_command_error() will be executed, and it will continue processing.
+
+        if(not message.content.startswith(prefix)):
+            #cause handle_commands ignores msg if msg doesn't starts with the prefix, manually call.
+            res=self.command_handle(message.content, message.channel.name)
+            if(res is not None):
+                await message.channel.send(res)
+        
         await self.handle_commands(message)
 
+    @commands.command()
+    async def 등록(self,ctx):
+        if(not is_trustable(ctx)):
+            return
+        
+        try:
+            if(prefix+registry_vaild.findall(ctx.message.content)[0] == ctx.message.content):
+                command,response=registry_parse.findall(ctx.message.content)
+                command=command[1:-1]
+                response=response[1:-1]
+        except Exception as e:
+            if(len(ctx.message.content.split(" "))==3):
+                tempsomething,command,response=ctx.message.content.split(" ")
+                del tempsomething
+            else:
+                print(e)
+                await ctx.send(f"명령어는 '{prefix}등록 등록할명령어 대답할단어' 식이에요. 명령어나 단어 사이에 띄어쓰기가 있다면, 명령어와 단어를 ` 문자로 감싸주세요!")
+                return
+        try:
+            command,response
+        except:
+            await ctx.send(f"명령어는 '{prefix}등록 등록할명령어 대답할단어' 식이에요. 명령어나 단어 사이에 띄어쓰기가 있다면, 명령어와 단어를 ` 문자로 감싸주세요!")
+            return
+        
+        #now, cmd is vaild
+        firebase.write_command(twitch.username_to_uid(ctx.channel.name), command, response)
+        await ctx.send(f"이제 {command}는 {response}로 반응할게요!")
+
+    @commands.command()
+    async def 삭제(self,ctx):
+        if(not is_trustable(ctx)):
+            return
+        try:
+            command=" ".join(ctx.message.content.split(" ")[1:])
+        except:
+            await ctx.send(f"명령어는 '{prefix}삭제 지울명령어' 식이에요.")
+            return
+        firebase.delete_command(twitch.username_to_uid(ctx.channel.name), command)
+        await ctx.send(f"이제 {command} 채팅에 더 이상 응답하지 않아요!")
+        
 
     @commands.command()
     async def echo(self,ctx):
