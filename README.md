@@ -1,4 +1,3 @@
 - environs
     - TWITCH_ACCESS_TOKEN : from [here](https://twitchtokengenerator.com/quick/o4qKOhbSmI)
-    - FIREBASE_URL : URL of Firebase RTDB
-    - FIREBASE_CREDENTIAL : path of Firebase Admin Credential
+    - FIREBASE_CREDENTIAL : Base64ed content of Firebase admin credential JSON file

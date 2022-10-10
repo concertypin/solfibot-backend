@@ -41,6 +41,7 @@ class Bot(commands.Bot):
     async def add(self, ctx: commands.Context):
         """
         ctx.author.name = sender's login id
+        ctx.channel.name = channel login id
         ctx.message.content = message string
         """
         if(not is_trustable(ctx)):
@@ -52,8 +53,8 @@ class Bot(commands.Bot):
             username = str(ctx.message.content).split(" ")[1]
             score_offset = int(str(ctx.message.content).split(" ")[2])
 
-            uid = twitch.username_to_uid(username)
-            score = firebase.get_score(uid) + score_offset
+            uid = ctx.author.id
+            score = firebase.get_score(797381013,uid) + score_offset
         except:
             await ctx.send(f"...뭐라고요? 문법은 {prefix}add <유저ID> <점수> 식이에요.")
             return
