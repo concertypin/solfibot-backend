@@ -8,19 +8,30 @@ cred = credentials.Certificate(json.loads(b64decode(os.environ["FIREBASE_CREDENT
 app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-# As an admin, the app has access to read and write all data, regradless of Security Rules
-def get_score(uid: int, channel_uid:int) -> int:
+def get_score_map(uid: int) -> dict:
     ref = db.collection(u"listener_data").document(str(uid)).get().to_dict()
 
     if (ref is None): # no such user
-        return 0
+        return None
     
+    return ref["score"]
+
+
+def get_score(uid: int, channel_uid:int) -> int:
     try:
-        return ref["score"][channel_uid]
+        score_map=get_score_map(uid)
+        if(score_map==None):
+            return 0
+        return score_map[str(channel_uid)]
     except KeyError:
         return 0 # user hasn't been scored in that channel
 
 
 def write_score(uid: int, channel_uid:int, score: int, username:str="__idk__"):
-    ref = db.reference(f"/data/{uid}")
-    ref.set({"score":score,"name":username})
+    doc=db.collection(u"listener_data").document(str(uid))
+
+    score_dict=get_score_map(uid)
+    score_dict[str(channel_uid)]=score
+    data={u"nickname":username, u"score":score_dict,u"uid":uid}
+
+    doc.set(data)

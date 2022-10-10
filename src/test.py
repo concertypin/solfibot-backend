@@ -26,8 +26,8 @@ class FirebaseTest(TestCase):
     def test_writing_something(self):
         import random
         import firebase
-        obj=random.sample([random.randint(-65536,-1),random.randint(1,65535)],1) ## get -65536 <= num <= 65535 (num != 0)
-        firebase.write_score(test_uid, obj)
+        obj=random.sample([random.randint(-65536,-1),random.randint(1,65535)],1)[0] ## get -65536 <= num <= 65535 (num != 0)
+        firebase.write_score(test_uid,test_object_uid, obj,test_username)
         self.assertEqual(firebase.get_score(test_uid,test_object_uid), obj)
     
 
