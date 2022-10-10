@@ -3,6 +3,8 @@ from twitchio.ext import commands
 import twitch
 import firebase
 from dotenv import load_dotenv
+import multiprocessing as mp
+import asyncio
 
 load_dotenv(verbose=True)
 prefix = '$'
@@ -23,11 +25,26 @@ class Bot(commands.Bot):
     async def event_ready(self):
         print(f'Logged in as | {self.nick}')
         print(f'User id is | {self.user_id}')
-    
+
     async def event_message(self, message):
         if message.echo:
+            return 
+        if not message.content.startswith(prefix):
             return
-        await self.handle_commands(message)
+        
+        def worker():
+            channel_uid=twitch.username_to_uid(message.channel.name)
+            commands_dict=firebase.read_commands(channel_uid)
+
+            command=message.content[len(prefix):]
+            response=commands_dict.get(command)
+            if(response is None):
+                return
+            
+            asyncio.run(message.channel.send(response)) 
+
+        p = mp.Process(name=f"handler of {message.content.split(' ')[0]}", target=worker)
+        p.start()
 
     @commands.command()
     async def echo(self,ctx):
