@@ -147,7 +147,7 @@ class Bot(commands.Bot):
             return
 
         try:
-            firebase.write_score(uid,channel_uid,score,ctx.channel.name)
+            firebase.write_score(uid,channel_uid,score,username)
         except:
             await ctx.send("...왜 버그가 났죠? 어? 어어?")
             return

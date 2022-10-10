@@ -12,7 +12,7 @@ def get_score_map(uid: int) -> dict:
     ref = db.collection(u"listener_data").document(str(uid)).get().to_dict()
 
     if (ref is None): # no such user
-        return None
+        return {}
     
     return ref["score"]
 
