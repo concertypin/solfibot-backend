@@ -132,14 +132,6 @@ class Bot(commands.Bot):
     
     @commands.command()
     async def add(self, ctx: commands.Context):
-        """
-        ctx.author.name = sender's login id
-<<<<<<< HEAD
-=======
-        ctx.channel.name = channel login id
->>>>>>> dev_firestore
-        ctx.message.content = message string
-        """
         if(not is_trustable(ctx)):
             return
 
