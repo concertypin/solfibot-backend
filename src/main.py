@@ -12,7 +12,7 @@ import re
 trim_paimon=re.compile(" HungryPaimon")
 registry_parse=re.compile(r"`[^`]*`")
 registry_vaild=re.compile(r"등록 `[^`]*` `[^`]*`")
-prefix = '$'
+prefix = '?'
 trustable=["konfani"]
 
 def is_trustable(ctx):
