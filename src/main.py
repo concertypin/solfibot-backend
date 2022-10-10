@@ -139,7 +139,7 @@ class Bot(commands.Bot):
             username = str(ctx.message.content).split(" ")[1]
             score_offset = int(str(ctx.message.content).split(" ")[2])
             channel_uid=twitch.username_to_uid(ctx.channel.name)
-            uid = ctx.author.id
+            uid = twitch.username_to_uid(username)
 
             score = firebase.get_score(uid,channel_uid) + score_offset
         except:
@@ -152,7 +152,7 @@ class Bot(commands.Bot):
             await ctx.send("...왜 버그가 났죠? 어? 어어?")
             return
 
-        await ctx.send(f'이제 {twitch.uid_to_nickname(uid)}님의 학점은 {score}이에요!')
+        await ctx.send(f'이제 {username}님의 학점은 {score}이에요!')
     
     @commands.command()
     async def evalAsDev(self,ctx):
