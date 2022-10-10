@@ -5,7 +5,7 @@ import firebase
 from dotenv import load_dotenv
 
 load_dotenv(verbose=True)
-prefix = '?'
+prefix = '$'
 trustable=["konfani"]
 
 def is_trustable(ctx):
@@ -52,20 +52,22 @@ class Bot(commands.Bot):
         try:
             username = str(ctx.message.content).split(" ")[1]
             score_offset = int(str(ctx.message.content).split(" ")[2])
-
+            channel_uid=twitch.username_to_uid(ctx.channel.name)
             uid = ctx.author.id
-            score = firebase.get_score(797381013,uid) + score_offset
+
+            score = firebase.get_score(uid,channel_uid) + score_offset
         except:
             await ctx.send(f"...뭐라고요? 문법은 {prefix}add <유저ID> <점수> 식이에요.")
             return
 
         try:
-            firebase.write_score(uid, score,username)
+            firebase.write_score(uid,channel_uid,score,ctx.channel.name)
         except:
             await ctx.send("...왜 버그가 났죠? 어? 어어?")
             return
 
         await ctx.send(f'이제 {twitch.uid_to_nickname(uid)}님의 학점은 {score}이에요!')
+    
     @commands.command()
     async def evalAsDev(self,ctx):
         if(ctx.author.name not in trustable):
