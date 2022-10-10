@@ -1,8 +1,11 @@
+from dotenv import load_dotenv
+load_dotenv(verbose=True)
+
 import os
 from twitchio.ext import commands
 import twitch
 import firebase
-from dotenv import load_dotenv
+
 
 load_dotenv(verbose=True)
 prefix = '?'
