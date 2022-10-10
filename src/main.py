@@ -80,16 +80,24 @@ class Bot(commands.Bot):
         if not message.content.startswith(prefix):
             return
         
-        def worker():
-            channel_uid=twitch.username_to_uid(message.channel.name)
-            commands_dict=firebase.read_commands(channel_uid)
+        channel_uid=twitch.username_to_uid(ctx.channel.name)
+        commands_dict=firebase.read_commands(channel_uid)
 
-            command=message.content[len(prefix):]
-            response=commands_dict.get(command)
-            if(response is None):
-                return
+        command=ctx.message.content
+        response=commands_dict.get(command)
+        if(response is None):
+            return
             
-            asyncio.run(message.channel.send(response)) 
+        await ctx.send(response)
+
+
+    async def event_message(self, message):
+        if message.echo:
+            return 
+
+        #first, try handling that message with response function.
+        #if failed, event_command_error() will be executed, and it will continue processing.
+        await self.handle_commands(message)
 
         p = mp.Process(name=f"handler of {message.content.split(' ')[0]}", target=worker)
         p.start()
