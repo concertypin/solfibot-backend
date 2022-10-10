@@ -71,29 +71,40 @@ class Bot(commands.Bot):
     async def 등록(self,ctx):
         if(not is_trustable(ctx)):
             return
-        
+        msg=str(ctx.message.content)
+        error_msg=f"명령어는 '{prefix}등록 등록할명령어 대답할단어' 식이에요. 명령어나 단어 사이에 띄어쓰기가 있다면, 그 명령어나 단어를 ` 문자로 감싸주세요!"
         try:
-            if(prefix+registry_vaild.findall(ctx.message.content)[0] == ctx.message.content):
-                command,response=registry_parse.findall(ctx.message.content)
-                command=command[1:-1]
-                response=response[1:-1]
+            baptik_num=len(msg)-len("".join(msg.split("`")))
+            if(baptik_num!=2 and baptik_num!=4 and baptik_num!=0):
+                raise Exception
+            
+            if(baptik_num==0 and len(msg.split(" "))!=2):
+                raise Exception
+            
+            something_parsed=msg.split("등록 ")[1].split("`")
+            command=""
+            response=""
+            for i in something_parsed:
+                if(i=="" or i==" "):
+                    continue
+                if(command==""):
+                    command=i
+                else:
+                    response=i
+            
         except Exception as e:
-            if(len(ctx.message.content.split(" "))==3):
-                tempsomething,command,response=ctx.message.content.split(" ")
-                del tempsomething
-            else:
-                print(e)
-                await ctx.send(f"명령어는 '{prefix}등록 등록할명령어 대답할단어' 식이에요. 명령어나 단어 사이에 띄어쓰기가 있다면, 명령어와 단어를 ` 문자로 감싸주세요!")
-                return
+            await ctx.send(error_msg)
+            return
         try:
-            command,response
+            if command=="" or response=="":
+                raise Exception
         except:
-            await ctx.send(f"명령어는 '{prefix}등록 등록할명령어 대답할단어' 식이에요. 명령어나 단어 사이에 띄어쓰기가 있다면, 명령어와 단어를 ` 문자로 감싸주세요!")
+            await ctx.send(error_msg)
             return
         
         #now, cmd is vaild
         firebase.write_command(twitch.username_to_uid(ctx.channel.name), command, response)
-        await ctx.send(f"이제 {command}는 {response}로 반응할게요!")
+        await ctx.send(f"이제 {command} 채팅에는 {response} 채팅으로 반응할게요!")
 
     @commands.command()
     async def 삭제(self,ctx):
@@ -106,16 +117,18 @@ class Bot(commands.Bot):
             return
         firebase.delete_command(twitch.username_to_uid(ctx.channel.name), command)
         await ctx.send(f"이제 {command} 채팅에 더 이상 응답하지 않아요!")
-        
+    
+    @commands.command()
+    async def 목록(self,ctx):   
+        res=""
+        for i in firebase.read_commands(twitch.username_to_uid(ctx.channel.name)):
+            res+=i+" | "
+        await ctx.send(res[:-3])
 
     @commands.command()
     async def echo(self,ctx):
         if(is_trustable(ctx)):
             await ctx.send(ctx.message.content[6:])
-
-    @commands.command()
-    async def 춘추(self,ctx):
-        await ctx.send("늙고 병든 1842년생 회장")
     
     @commands.command()
     async def add(self, ctx: commands.Context):
