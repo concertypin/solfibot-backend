@@ -4,16 +4,10 @@ import os
 from twitchio.ext import commands
 import twitch
 import firebase
-<<<<<<< HEAD
 import sys
 import multiprocessing as mp
 import asyncio
 import re
-=======
-from dotenv import load_dotenv
-import multiprocessing as mp
-import asyncio
->>>>>>> 60b4565 (printing command completed)
 
 trim_paimon=re.compile(" HungryPaimon")
 registry_parse=re.compile(r"`[^`]*`")
@@ -37,7 +31,6 @@ class Bot(commands.Bot):
         print(f'Logged in as | {self.nick}')
         print(f'User id is | {self.user_id}')
 
-<<<<<<< HEAD
     def command_handle(self,msg:str,channel_name:str):
         channel_uid=twitch.username_to_uid(channel_name)
         commands_dict=firebase.read_commands(channel_uid)
@@ -73,51 +66,6 @@ class Bot(commands.Bot):
                 await message.channel.send(res)
         
         await self.handle_commands(message)
-=======
-    async def event_message(self, message):
-        if message.echo:
-            return 
-        if not message.content.startswith(prefix):
-            return
-        
-        channel_uid=twitch.username_to_uid(ctx.channel.name)
-        commands_dict=firebase.read_commands(channel_uid)
-
-        command=trim_paimon.sub("",msg) #trimming HungryPaimon imoji
-        response=commands_dict.get(command)
-        if(response is None):
-            return
-        return response
-
-    async def event_command_error(self,ctx,error):
-        #if unable to find response func(or there is REAL ERROR in response func), this func will be executed.
-
-        if(str(error).find("No command") == -1):
-            print(error,file=sys.stderr) #print THAT REAL ERROR in stderr
-            return
-        res=self.command_handle(ctx.message.content, ctx.channel.name)
-        if(res is not None):
-            await ctx.send(res)
-
-
-    async def event_message(self, message):
-        if message.echo:
-            return 
-
-        #first, try handling that message with response function.
-        #if failed, event_command_error() will be executed, and it will continue processing.
-
-        if(not message.content.startswith(prefix)):
-            #cause handle_commands ignores msg if msg doesn't starts with the prefix, manually call.
-            res=self.command_handle(message.content, message.channel.name)
-            if(res is not None):
-                await message.channel.send(res)
-        
-        await self.handle_commands(message)
-
-        p = mp.Process(name=f"handler of {message.content.split(' ')[0]}", target=worker)
-        p.start()
->>>>>>> 60b4565 (printing command completed)
 
     @commands.command()
     async def 등록(self,ctx):
