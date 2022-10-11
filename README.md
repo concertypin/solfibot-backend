@@ -14,7 +14,7 @@ Requirements
     - FIREBASE_CREDENTIAL : Base64ed content of Firebase admin credential JSON file.
     - TWITCH_CLIENT_ID : Twitch token's client id. This is optional. Default value is `gp762nuuoqcoxypju8c569th9wz7q5`. (client id of [twitchtokengenerator.com]())
     - PREFIX : Prefix of internal functions. If lenght of PREFIX is not 1(or non-ascii character), this might not run properly.
-    - TRUSTABLE_USER : Comma-seperated twitch user login ID. this user can access to all of commands and server resource (via ...AsDev command). This is optional.
+    - TRUSTABLE_USER : Comma-seperated twitch user login ID whose channel will be joined by the bot. this user can access to all of commands and server resource (via ...AsDev command). This is optional.
 
 Standalone
 ---
@@ -29,6 +29,6 @@ Docker
 ```
 git clone https://github.com/konfani/schoolScore && cd schoolScore && docker build -t schoolscore:latest
 
-docker run -it -e TWITCH_ACCESS_TOKEN=<YOUR_TOKEN> -e FIREBASE_CREDENTIAL=<YOUR_CREDENTIAL> schoolscore
+docker run -it -e TWITCH_ACCESS_TOKEN=<YOUR_TOKEN> -e FIREBASE_CREDENTIAL=<YOUR_CREDENTIAL> -e PREFIX=<PREFIX> -e TARGET=<TARGET> schoolscore
 ```
 Environment variables can be passed with both .env file or Docker parameters.
