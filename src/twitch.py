@@ -2,7 +2,9 @@ import os
 import requests
 
 token = os.environ["TWITCH_ACCESS_TOKEN"]
-client_id = "gp762nuuoqcoxypju8c569th9wz7q5"
+client_id = os.environ.get("TWITCH_CLIENT_ID")
+if(client_id is None):
+    client_id="gp762nuuoqcoxypju8c569th9wz7q5"
 
 
 def uid_to_username(uid: int) -> str:

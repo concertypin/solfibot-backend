@@ -12,8 +12,14 @@ import re
 trim_paimon=re.compile(" HungryPaimon")
 registry_parse=re.compile(r"`[^`]*`")
 registry_vaild=re.compile(r"등록 `[^`]*` `[^`]*`")
-prefix = '?'
-trustable=["konfani"]
+prefix = os.environ["PREFIX"]
+
+trustable=os.environ.get("TRUSTABLE_USER")
+if(trustable is None):
+    trustable=[]
+else:
+    trustable=trustable.split(",")
+
 
 def is_trustable(ctx):
     if(ctx.author.is_mod):
@@ -22,12 +28,14 @@ def is_trustable(ctx):
         return True
     return False
 
+print(f"Prefix is {prefix}")
+
 class Bot(commands.Bot):
     def __init__(self):
         super().__init__(token=os.environ["TWITCH_ACCESS_TOKEN"], prefix=prefix,
-                         initial_channels=["orrrchan","badacredit"])
+                         initial_channels=list(os.environ["TARGET"].split(",")))
 
-    async def event_ready(self):
+    async def event_ready(self):    
         print(f'Logged in as | {self.nick}')
         print(f'User id is | {self.user_id}')
 
