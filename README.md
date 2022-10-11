@@ -27,8 +27,8 @@ For Debian or Ubuntu:
 Docker
 ---
 ```
-git clone https://github.com/konfani/schoolScore && cd schoolScore && docker build -t schoolScore:latest
+git clone https://github.com/konfani/schoolScore && cd schoolScore && docker build -t schoolscore:latest
 
-docker run -it -e TWITCH_ACCESS_TOKEN=<YOUR_TOKEN> -e FIREBASE_CREDENTIAL=<YOUR_CREDENTIAL> schoolScore
+docker run -it -e TWITCH_ACCESS_TOKEN=<YOUR_TOKEN> -e FIREBASE_CREDENTIAL=<YOUR_CREDENTIAL> schoolscore
 ```
 Environment variables can be passed with both .env file or Docker parameters.
