@@ -79,6 +79,7 @@ class Bot(commands.Bot):
     async def 등록(self,ctx):
         if(not is_trustable(ctx)):
             return
+        print(ctx.author.name,"->",ctx.message.content)
         msg=str(ctx.message.content)
         error_msg=f"명령어는 '{prefix}등록 등록할명령어 대답할단어' 식이에요. 명령어나 단어 사이에 띄어쓰기가 있다면, 그 명령어나 단어를 ` 문자로 감싸주세요!"
         try:
@@ -118,6 +119,7 @@ class Bot(commands.Bot):
     async def 삭제(self,ctx):
         if(not is_trustable(ctx)):
             return
+        print(ctx.author.name,"->",ctx.message.content)
         try:
             command=" ".join(ctx.message.content.split(" ")[1:])
         except:
