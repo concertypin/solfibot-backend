@@ -87,7 +87,7 @@ class Bot(commands.Bot):
             if(baptik_num!=2 and baptik_num!=4 and baptik_num!=0):
                 raise Exception
             
-            if(baptik_num==0 and len(msg.split(" "))!=2):
+            if(baptik_num==0 and len(msg.split(" "))!=3):
                 raise Exception
             
             something_parsed=msg.split("등록 ")[1].split("`")
