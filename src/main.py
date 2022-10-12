@@ -89,17 +89,20 @@ class Bot(commands.Bot):
             
             if(baptik_num==0 and len(msg.split(" "))!=3):
                 raise Exception
-            
-            something_parsed=msg.split("등록 ")[1].split("`")
-            command=""
-            response=""
-            for i in something_parsed:
-                if(i=="" or i==" "):
-                    continue
-                if(command==""):
-                    command=i
-                else:
-                    response=i
+            if(baptik_num==0):
+                command=msg.split(" ")[1]
+                response=msg.split(" ")[2]
+            else:
+                something_parsed=msg.split("등록 ")[1].split("`")
+                command=""
+                response=""
+                for i in something_parsed:
+                    if(i=="" or i==" "):
+                        continue
+                    if(command==""):
+                        command=i
+                    else:
+                        response=i
             
         except Exception as e:
             await ctx.send(error_msg)
