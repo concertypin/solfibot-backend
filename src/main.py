@@ -43,7 +43,7 @@ class Bot(commands.Bot):
         channel_uid=twitch.username_to_uid(channel_name)
         commands_dict=firebase.read_commands(channel_uid)
 
-        command=trim_paimon.sub("",msg) #trimming HungryPaimon imoji
+        command=trim_paimon.sub("",msg) #trimming HungryPaimon emoji
         response=commands_dict.get(command)
         if(response is None):
             return
@@ -59,7 +59,6 @@ class Bot(commands.Bot):
         if(res is not None):
             await ctx.send(res)
 
-
     async def event_message(self, message):
         if message.echo:
             return 
@@ -72,6 +71,7 @@ class Bot(commands.Bot):
             res=self.command_handle(message.content, message.channel.name)
             if(res is not None):
                 await message.channel.send(res)
+                return
         
         await self.handle_commands(message)
 
