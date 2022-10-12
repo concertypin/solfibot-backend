@@ -1,4 +1,3 @@
-    
 How to run?
 ===
 Requirements
@@ -32,3 +31,16 @@ git clone https://github.com/konfani/schoolScore && cd schoolScore && docker bui
 docker run -it -e TWITCH_ACCESS_TOKEN=<YOUR_TOKEN> -e FIREBASE_CREDENTIAL=<YOUR_CREDENTIAL> -e PREFIX=<PREFIX> -e TARGET=<TARGET> schoolscore
 ```
 Environment variables can be passed with both .env file or Docker parameters.
+
+How to use?
+===
+- Default command
+    - Every default command should be called with prefix passed by `PREFIX` environ.
+
+    - `등록 <command> <response>` : If new chat is `<command>`, then send `response` in that channel. Commands are saved in seperated channel(inter-channel command sharing is not available). If `<command>` or `<response` contains space, both of that should be covered with baptik( \` ).
+    - `삭제 <command>` : Delete registed command.
+    - `목록` : List registed commands.
+    - `echo <string>`: Send `<string>` to that channel.
+    - `evalAsDev <expession>` : Return the result of `<expression>`. Only trustable users(written in environs) can run that.
+    - `execAsDev <cmd>` : Execute `<cmd>` in Python. Only trustable users(written in environs) can run that.
+    - `ping` : Return `?나임?`. Everyone can run this command.
