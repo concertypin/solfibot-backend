@@ -1,9 +1,11 @@
+[한국어 문서도 있어요!](https://github.com/konfani/schoolScore/blob/master/README_ko.md)
+
+
 How to run?
 ===
 Requirements
 ---
-- Ubuntu 18+
-    - Windows is also OK, but Windows might be unsupported soon.
+- Windows or Ubuntu 18+
 - Python 3.6+
 - [Firestore](https://firebase.google.com/products/firestore) and its admin credential
 
@@ -37,10 +39,10 @@ How to use?
 - Default command
     - Every default command should be called with prefix passed by `PREFIX` environ.
 
-    - `등록 <command> <response>` : If new chat is `<command>`, then send `response` in that channel. Commands are saved in seperated channel(inter-channel command sharing is not available). If `<command>` or `<response` contains space, both of that should be covered with baptik( \` ).
+    - `등록 <command> <response>` : If new chat is `<command>`, then send `response` in that channel. Commands are saved in seperated channel(inter-channel command sharing is not available). If `<command>` or `<response>` contains space, it should be covered with baptik( \` ).
     - `삭제 <command>` : Delete registed command.
     - `목록` : List registed commands.
-    - `echo <string>`: Send `<string>` to that channel.
-    - `evalAsDev <expession>` : Return the result of `<expression>`. Only trustable users(written in environs) can run that.
-    - `execAsDev <cmd>` : Execute `<cmd>` in Python. Only trustable users(written in environs) can run that.
+    - `echo <string>`: Send `<string>` to that channel. If `<string>` is started with slash(/), normal users can't use it.
+    - `evalAsDev <expession>` : Return the result of `<expression>`. Only trustable users(written in environs) can run it.
+    - `execAsDev <cmd>` : Execute `<cmd>` in Python. Only trustable users(written in environs) can run it.
     - `ping` : Return `?나임?`. Everyone can run this command.
