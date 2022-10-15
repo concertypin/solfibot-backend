@@ -1,15 +1,4 @@
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-from base64 import b64decode
-import json
-import os
-
-cred = credentials.Certificate(
-    json.loads(b64decode(os.environ["FIREBASE_CREDENTIAL"]).decode())
-)
-app = firebase_admin.initialize_app(cred)
-db = firestore.client()
+from ..settings import db
 
 
 def get_score_map(uid: int) -> dict:

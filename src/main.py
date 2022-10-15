@@ -1,33 +1,15 @@
-from dotenv import load_dotenv
 import sys
 import re
 import os
 from twitchio.ext import commands
+from settings import prefix, trustable, is_trustable
+from src.modules import firebase, twitch
+from commands import scoring
 
-load_dotenv(verbose=True)  # import env before import twitch.py and firebase.py
-
-import twitch
-import firebase
 
 trim_paimon = re.compile(" HungryPaimon")
 registry_parse = re.compile(r"`[^`]*`")
 registry_vaild = re.compile(r"등록 `[^`]*` `[^`]*`")
-prefix = os.environ["PREFIX"]
-
-trustable = os.environ.get("TRUSTABLE_USER")
-if trustable is None:
-    trustable = []
-else:
-    trustable = trustable.split(",")
-
-
-def is_trustable(ctx):
-    if ctx.author.is_mod:
-        return True
-    if ctx.author.name in trustable:
-        return True
-    return False
-
 
 print(f"Prefix is {prefix}")
 
@@ -154,28 +136,7 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def add(self, ctx: commands.Context):
-        if not is_trustable(ctx):
-            return
-
-        try:
-            username = str(ctx.message.content).split(" ")[1]
-            score_offset = int(str(ctx.message.content).split(" ")[2])
-            channel_uid = twitch.username_to_uid(ctx.channel.name)
-            uid = twitch.username_to_uid(username)
-
-            score = firebase.get_score(uid, channel_uid) + score_offset
-        except:
-            await ctx.send(f"...뭐라고요? 문법은 {prefix}add <유저ID> <점수> 식이에요.")
-            return
-
-        try:
-            firebase.write_score(uid, channel_uid, score, username)
-        except:
-            await ctx.send("...왜 버그가 났죠? 어? 어어?")
-            return
-
-        await ctx.send(f"이제 {username}님의 학점은 {score}이에요!")
-
+        scoring.add(ctx)
     @commands.command()
     async def evalAsDev(self, ctx):
         if ctx.author.name not in trustable:
