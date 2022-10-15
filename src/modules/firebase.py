@@ -1,4 +1,4 @@
-from ..settings import db
+from settings import db
 
 
 def get_score_map(uid: int) -> dict:

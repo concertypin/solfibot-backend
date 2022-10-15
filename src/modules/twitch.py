@@ -1,5 +1,5 @@
 import requests
-from ..settings import token, client_id
+from settings import token, client_id
 
 
 def uid_to_username(uid: int) -> str:

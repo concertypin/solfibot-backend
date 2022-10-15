@@ -1,10 +1,10 @@
 from twitchio.ext import commands
-from ..modules import twitch
-from ..modules import firebase
-from ..settings import is_trustable, prefix
+from modules import twitch
+from modules import firebase
+from settings import is_trustable, prefix
 
 
-def add(ctx: commands.Context):
+async def add(ctx: commands.Context):
     if not is_trustable(ctx):
         return
 
