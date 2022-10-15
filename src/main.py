@@ -85,6 +85,7 @@ class Bot(commands.Bot):
     @commands.command()
     async def add(self, ctx: commands.Context):
         await scoring.add(ctx)
+
     @commands.command()
     async def evalAsDev(self, ctx):
         if ctx.author.name not in trustable:
@@ -114,6 +115,7 @@ class Bot(commands.Bot):
     @commands.command()
     async def ping(self, ctx: commands.Context):
         await ctx.send("?나임?")
+
 
 if __name__ == "__main__":
     bot = Bot()

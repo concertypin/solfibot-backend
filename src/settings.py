@@ -28,9 +28,11 @@ def is_trustable(ctx):
 
 
 # firebase.py
-app = firebase_admin.initialize_app(credentials.Certificate(
-    json.loads(b64decode(os.environ["FIREBASE_CREDENTIAL"]).decode())
-))
+app = firebase_admin.initialize_app(
+    credentials.Certificate(
+        json.loads(b64decode(os.environ["FIREBASE_CREDENTIAL"]).decode())
+    )
+)
 db = firestore.client()
 
 # twitch.py

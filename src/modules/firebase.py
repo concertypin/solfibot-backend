@@ -2,7 +2,7 @@ from settings import db
 
 
 def get_score_map(uid: int) -> dict:
-    ref = db.collection(u"listener_data").document(str(uid)).get().to_dict()
+    ref = db.collection("listener_data").document(str(uid)).get().to_dict()
 
     if ref is None:  # no such user
         return {}
@@ -21,17 +21,17 @@ def get_score(uid: int, channel_uid: int) -> int:
 
 
 def write_score(uid: int, channel_uid: int, score: int, username: str = "__idk__"):
-    doc = db.collection(u"listener_data").document(str(uid))
+    doc = db.collection("listener_data").document(str(uid))
 
     score_dict = get_score_map(uid)
     score_dict[str(channel_uid)] = score
-    data = {u"nickname": username, u"score": score_dict, u"uid": int(uid)}
+    data = {"nickname": username, "score": score_dict, "uid": int(uid)}
 
     doc.set(data)
 
 
 def read_commands(channel_uid: int) -> dict:
-    ref = db.collection(u"streamer_data").document(str(channel_uid)).get().to_dict()
+    ref = db.collection("streamer_data").document(str(channel_uid)).get().to_dict()
 
     if ref is None:  # no such user
         return {}
@@ -41,19 +41,19 @@ def read_commands(channel_uid: int) -> dict:
 
 
 def write_command(channel_uid: int, command: str, response: str):
-    ref = db.collection(u"streamer_data").document(str(channel_uid))
+    ref = db.collection("streamer_data").document(str(channel_uid))
 
     command_dict = read_commands(channel_uid)
     command_dict[command] = response
-    data = {u"commands": command_dict}
+    data = {"commands": command_dict}
     ref.set(data)
 
 
 def delete_command(channel_uid: int, command: str):
-    ref = db.collection(u"streamer_data").document(str(channel_uid))
+    ref = db.collection("streamer_data").document(str(channel_uid))
 
     command_dict = read_commands(channel_uid)
     if command_dict.get(command) is not None:
         del command_dict[command]
-        data = {u"commands": command_dict}
+        data = {"commands": command_dict}
         ref.set(data)
