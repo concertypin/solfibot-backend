@@ -53,7 +53,9 @@ class FirebaseCommandsTest(TestCase):
         response = "test:" + str(random.randint(0, 65535))
         firebase.write_command(test_uid, command, response)
         self.assertEqual(
-            firebase.read_commands(test_uid), firebase.read_commands(test_uid) | {command: response})
+            firebase.read_commands(test_uid),
+            firebase.read_commands(test_uid) | {command: response},
+        )
         # equals assertDictContainsSubset({command: response}, firebase.read_commands(test_uid))
         return command
 
