@@ -66,6 +66,10 @@ async def delete(ctx: commands.Context):
 
 async def listing(ctx: commands.Context):
     res = ""
-    for i in firebase.read_commands(twitch.username_to_uid(ctx.channel.name)):
+    cmds=firebase.read_commands(twitch.username_to_uid(ctx.channel.name))
+    if len(cmds) == 0:
+        await ctx.send("등록된 명령어가 없어요.")
+        return
+    for i in cmds:
         res += i + " | "
     await ctx.send(res[:-3])
