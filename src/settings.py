@@ -40,3 +40,7 @@ token = os.environ["TWITCH_ACCESS_TOKEN"]
 client_id = os.environ.get("TWITCH_CLIENT_ID")
 if client_id is None:
     client_id = "gp762nuuoqcoxypju8c569th9wz7q5"
+
+
+# safetybrowsing.py
+safebrowsing_apikey = os.environ["SAFETYBROWSING_KEY"]
