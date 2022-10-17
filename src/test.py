@@ -1,5 +1,4 @@
 from unittest import TestCase, main
-from base64 import b64decode
 
 test_username = "testUsername"
 test_uid = 999999
@@ -7,10 +6,6 @@ test_object_uid = 12345
 
 test_void_uid = 65535
 test_void_object_uid = 98764
-
-phishing_link = b64decode(
-    "aHR0cHM6Ly90ZXN0c2FmZWJyb3dzaW5nLmFwcHNwb3QuY29tL3MvcGhpc2hpbmcuaHRtbA=="
-).decode("utf-8")
 
 
 class FirebaseScoreTest(TestCase):
@@ -80,17 +75,6 @@ class FirebaseCommandsTest(TestCase):
         for i in commands:
             if i.startswith("_test_"):
                 firebase.delete_command(test_uid, i)
-
-
-class SafetyBrowsingTest(TestCase):
-    def test_phishing_lookup(cls):
-        import asyncio
-        from commands import safetybrowsing as sb
-
-        res = asyncio.run(
-            sb.lookup(phishing_link)
-        )
-        cls.assertNotEqual(res,None)
 
 
 if __name__ == "__main__":
