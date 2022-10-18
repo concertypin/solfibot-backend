@@ -12,7 +12,7 @@ phishing_link = b64decode(
     "aHR0cHM6Ly90ZXN0c2FmZWJyb3dzaW5nLmFwcHNwb3QuY29tL3MvcGhpc2hpbmcuaHRtbA=="
 ).decode("utf-8")
 
-url_testcase = []
+url_testcase = ["https://gitpod.com","dsfgqrwefdsf.re","dsf.ewq sdfa.bdre","fdg.poknbvghnmkjhv.w"]
 
 
 class FirebaseScoreTest(TestCase):
