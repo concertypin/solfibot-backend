@@ -7,17 +7,21 @@ def get_score_map(uid: int) -> dict:
     if ref is None:  # no such user
         return {}
 
-    return ref["score"]
+    if ref.get("score") is None:
+        return {}
+
+    return ref.get("score")
 
 
 def get_score(uid: int, channel_uid: int) -> int:
-    try:
-        score_map = get_score_map(uid)
-        if score_map is None:
-            return 0
-        return score_map[str(channel_uid)]
-    except KeyError:
-        return 0  # user hasn't been scored in that channel
+    score_map = get_score_map(uid)
+    if score_map is {}:
+        return 0
+    if (
+        score_map.get(str(channel_uid)) is None
+    ):  # user hasn't been scored in that channel
+        return 0
+    return score_map.get(str(channel_uid))
 
 
 def write_score(uid: int, channel_uid: int, score: int, username: str = "__idk__"):
@@ -57,3 +61,17 @@ def delete_command(channel_uid: int, command: str):
         del command_dict[command]
         data = {"commands": command_dict}
         ref.set(data)
+
+
+def is_safesbowsing_enabled(channel_id: int) -> bool:
+    ref = db.collection("streamer_data").document(str(channel_id)).get().to_dict()
+    if ref is None:
+        return False
+    if ref.get("safety_browsing") is None:
+        return False
+    return ref.get("safety_browsing")
+
+
+def set_safetybrowsing(channel_id: int, stat: bool):
+    ref = db.collection("streamer_data").document(str(channel_id))
+    ref.set({"safety_browsing": stat}, merge=True)
