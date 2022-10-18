@@ -1,4 +1,5 @@
 from unittest import TestCase, main
+from base64 import b64decode
 
 test_username = "testUsername"
 test_uid = 999999
@@ -6,6 +7,12 @@ test_object_uid = 12345
 
 test_void_uid = 65535
 test_void_object_uid = 98764
+
+phishing_link = b64decode(
+    "aHR0cHM6Ly90ZXN0c2FmZWJyb3dzaW5nLmFwcHNwb3QuY29tL3MvcGhpc2hpbmcuaHRtbA=="
+).decode("utf-8")
+
+url_testcase = []
 
 
 class FirebaseScoreTest(TestCase):
@@ -30,9 +37,8 @@ class FirebaseScoreTest(TestCase):
         import random
         from src.modules import firebase
 
-        obj = random.sample([random.randint(-65536, -1), random.randint(1, 65535)], 1)[
-            0
-        ]  # get -65536 <= num <= 65535 (num != 0)
+        obj = random.sample([random.randint(-100, -1), random.randint(1, 100)], 1)[0]
+        # get -100 <= num <= 100 (num != 0)
         firebase.write_score(test_uid, test_object_uid, obj, test_username)
         self.assertEqual(firebase.get_score(test_uid, test_object_uid), obj)
 
@@ -52,11 +58,9 @@ class FirebaseCommandsTest(TestCase):
         command = "_test_" + str(+random.randint(0, 65535))
         response = "test:" + str(random.randint(0, 65535))
         firebase.write_command(test_uid, command, response)
-        self.assertEqual(
-            firebase.read_commands(test_uid),
-            firebase.read_commands(test_uid) | {command: response},
+        self.assertDictContainsSubset(
+            {command: response}, firebase.read_commands(test_uid)
         )
-        # equals assertDictContainsSubset({command: response}, firebase.read_commands(test_uid))
         return command
 
     def test_deleting_command(self):
@@ -75,6 +79,21 @@ class FirebaseCommandsTest(TestCase):
         for i in commands:
             if i.startswith("_test_"):
                 firebase.delete_command(test_uid, i)
+
+
+class SafetyBrowsingTest(TestCase):
+    def test_phishing_lookup(cls):
+        import asyncio
+        from commands import safebrowsing as sb
+
+        res = asyncio.run(sb.lookup(phishing_link))
+        cls.assertNotEqual(res, None)
+
+    def test_url_parsing(cls):
+        from commands import safebrowsing as sb
+
+        for i in url_testcase:
+            cls.assertNotEqual(sb.url_regex.search(i), None)
 
 
 if __name__ == "__main__":

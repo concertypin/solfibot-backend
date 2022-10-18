@@ -2,14 +2,15 @@ import sys
 import re
 import os
 from twitchio.ext import commands
+import twitchio
 from settings import prefix, trustable, is_trustable
 from modules import firebase, twitch
-from commands import scoring, commanding
+from commands import commanding, safebrowsing, scoring
 
 
 trim_paimon = re.compile(" HungryPaimon")
 registry_parse = re.compile(r"`[^`]*`")
-registry_vaild = re.compile(r"등록 `[^`]*` `[^`]*`")
+registry_valid = re.compile(r"등록 `[^`]*` `[^`]*`")
 
 print(f"Prefix is {prefix}")
 
@@ -48,11 +49,12 @@ class Bot(commands.Bot):
         if res is not None:
             await ctx.send(res)
 
-    async def event_message(self, message):
+    async def event_message(self, message: twitchio.message.Message):
         if message.echo:
             return
 
-            # first, try handling that message with response function.
+        await safebrowsing.safebrowsing(message.content,message.channel.send)
+        # first, try handling that message with response function.
         # if failed, event_command_error() will be executed, and it will continue processing.
 
         if not message.content.startswith(prefix):

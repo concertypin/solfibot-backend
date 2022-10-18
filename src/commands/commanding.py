@@ -41,7 +41,7 @@ async def register(ctx: commands.Context):
                 else:
                     response = i
 
-    except Exception:
+    except:
         await ctx.send(error_msg)
         return
     try:
