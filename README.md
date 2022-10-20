@@ -16,6 +16,7 @@ Requirements
     - TWITCH_CLIENT_ID : Twitch token's client id. This is optional. Default value is `gp762nuuoqcoxypju8c569th9wz7q5`. (client id of [twitchtokengenerator.com]())
     - PREFIX : Prefix of internal functions. If lenght of PREFIX is not 1(or non-ascii character), this might not run properly.
     - TRUSTABLE_USER : Comma-seperated twitch user login ID whose channel will be joined by the bot. this user can access to all of commands and server resource (via ...AsDev command). This is optional. If there isn't value, only moderators can use admin commands.
+    - SAFETYBROWSING_KEY : Google Safe Browsing API key.
 
 Standalone
 ---
@@ -46,3 +47,4 @@ How to use?
     - `evalAsDev <expession>` : Return the result of `<expression>`. Only trustable users(written in environs) can run it.
     - `execAsDev <cmd>` : Execute `<cmd>` in Python. Only trustable users(written in environs) can run it.
     - `ping` : Return `?나임?`. Everyone can run this command.
+    - `링크검열` : Toggle threat link protection. Default is disabled.
