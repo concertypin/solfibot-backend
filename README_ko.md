@@ -14,6 +14,7 @@
     - TWITCH_CLIENT_ID : Twitch 토큰의 Client ID. 생략할 수 있습니다. 기본값은 `gp762nuuoqcoxypju8c569th9wz7q5` 입니다. ([twitchtokengenerator.com]()의 기본 토큰)
     - PREFIX : 기본 명령어 호출 접두사. 두 글자 이상이거나 영어/특수문자가 아니라면 정상 작동하지 않을 수 있습니다.
     - TRUSTABLE_USER : 콤마(`,`)로 구분된 Twitch 유저 ID. 이곳에 쓰인 유저는 봇의 완전한 권한을 얻습니다(...AsDev 명령어 포함). 생략할 수 있습니다. 주어지지 않았다면, 채널의 관리자만 관리 명령어를 사용할 수 있습니다.
+    - SAFETYBROWSING_KEY : Google Safe Browsing API 키.
 
 Standalone
 ---
@@ -44,3 +45,4 @@ docker run -it -e TWITCH_ACCESS_TOKEN=<YOUR_TOKEN> -e FIREBASE_CREDENTIAL=<YOUR_
     - `evalAsDev <expession>` : `<expression>`의 결과를 출력합니다. TRUSTABLE_USER만 이 명령어를 실행할 수 있습니다.
     - `execAsDev <cmd>` : 파이썬에서 `<cmd>`를 실행합니다. TRUSTABLE_USER만 이 명령어를 실행할 수 있습니다.
     - `ping` : `?나임?`을 출력합니다. 이 명령어는 모두 사용할 수 있습니다.
+    - `링크검열` : 위험한 링크 경고를 토글합니다. 기본값은 경고하지 않습니다.
