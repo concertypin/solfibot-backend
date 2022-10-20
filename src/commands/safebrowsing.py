@@ -2,6 +2,7 @@ from pysafebrowsing import SafeBrowsing
 from settings import safebrowsing_apikey
 from twitchio.ext import commands
 import re
+from modules import firebase
 
 s = SafeBrowsing(safebrowsing_apikey)
 trustable_cache_url = ["youtube.com", "youtu.be", "twip.kr", "toon.at"]
@@ -36,7 +37,9 @@ async def lookup(target_url: str):
     return None
 
 
-async def safebrowsing(msg,sender):
+async def safebrowsing(msg,sender,uid):
+    if not firebase.is_safesbowsing_enabled(uid):
+        return
     t = is_url(msg)
     if t is None:
         return

@@ -12,7 +12,12 @@ phishing_link = b64decode(
     "aHR0cHM6Ly90ZXN0c2FmZWJyb3dzaW5nLmFwcHNwb3QuY29tL3MvcGhpc2hpbmcuaHRtbA=="
 ).decode("utf-8")
 
-url_testcase = ["https://gitpod.com","dsfgqrwefdsf.re","dsf.ewq sdfa.bdre","fdg.poknbvghnmkjhv.w"]
+url_testcase = [
+    "https://gitpod.com",
+    "dsfgqrwefdsf.re",
+    "dsf.ewq sdfa.bdre",
+    "fdg.poknbvghnmkjhv.w",
+]
 
 
 class FirebaseScoreTest(TestCase):
@@ -95,6 +100,20 @@ class SafetyBrowsingTest(TestCase):
         for i in url_testcase:
             cls.assertNotEqual(sb.url_regex.search(i), None)
 
+    def test_get_firebase_status(cls):
+        from modules import firebase
+
+        cls.assertEqual(firebase.is_safesbowsing_enabled(test_uid), True)
+
+    def test_write_firebase_status(cls):
+        from modules import firebase
+        firebase.set_safetybrowsing(test_uid, False)
+        cls.assertEqual(firebase.is_safesbowsing_enabled(test_uid), False)
+    
+    @classmethod
+    def tearDownClass(cls):
+        from modules import firebase
+        firebase.set_safetybrowsing(test_uid, True)
 
 if __name__ == "__main__":
     main()

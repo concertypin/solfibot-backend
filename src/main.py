@@ -41,7 +41,6 @@ class Bot(commands.Bot):
 
     async def event_command_error(self, ctx, error):
         # if unable to find response func(or there is REAL ERROR in response func), this func will be executed.
-
         if str(error).find("No command") == -1:
             print(error, file=sys.stderr)  # print THAT REAL ERROR in stderr
             return
@@ -53,7 +52,7 @@ class Bot(commands.Bot):
         if message.echo:
             return
 
-        await safebrowsing.safebrowsing(message.content,message.channel.send)
+        await safebrowsing.safebrowsing(message.content, message.channel.send,twitch.username_to_uid(message.channel.name))
         # first, try handling that message with response function.
         # if failed, event_command_error() will be executed, and it will continue processing.
 
@@ -88,6 +87,18 @@ class Bot(commands.Bot):
     async def add(self, ctx: commands.Context):
         await scoring.add(ctx)
 
+    @commands.command()
+    async def 링크검열(self,ctx:commands.Context):
+        if not is_trustable(ctx):
+            return
+        uid=twitch.username_to_uid(ctx.channel.name)
+        now=firebase.is_safesbowsing_enabled(uid)
+        if(now):
+            firebase.set_safetybrowsing(uid, False)
+            await ctx.send("이제 더 이상 위험한 링크를 검사하지 않아요!")
+        else:
+            firebase.set_safetybrowsing(uid, True)
+            await ctx.send("이제부터 위험한 링크를 경고할게요!")
     @commands.command()
     async def evalAsDev(self, ctx):
         if ctx.author.name not in trustable:
