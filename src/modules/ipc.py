@@ -2,13 +2,14 @@ import uvicorn
 from fastapi import FastAPI
 
 app = FastAPI()
-join_channels=None
-
+join_channels=[]
 @app.get("/join")
 async def join(username:str):
-    await join_channels([username])
+    join_channels.append(username)
+    return username
 
 def init(joinch):
-    join_channels=joinch[0]
+    global join_channels
+    join_channels=joinch
     print("ipc server is starting:")
     uvicorn.run(app, host="0.0.0.0", port=8000)

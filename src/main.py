@@ -6,11 +6,12 @@ import twitchio
 from settings import prefix, trustable, is_trustable
 from modules import firebase, twitch
 from commands import commanding, safebrowsing, scoring
-
+import multiprocessing as mp
 
 trim_paimon = re.compile(" HungryPaimon")
 registry_parse = re.compile(r"`[^`]*`")
 registry_valid = re.compile(r"등록 `[^`]*` `[^`]*`")
+l = mp.Manager().list()
 
 print(f"Prefix is {prefix}")
 
@@ -25,19 +26,9 @@ class Bot(commands.Bot):
         )
 
     async def event_ready(self):
-        import multiprocessing as mp
-
         print(f"Logged in as | {self.nick}")
         print(f"User id is | {self.user_id}")
-
-        from modules import ipc
-        import multiprocessing as mp
-        import asyncio
-
-        mp.Process(
-            target=lambda: ipc.init,
-            args=(mp.Manager().list([self.join_channels])),
-        ).start()
+        self.join_lookup.start()
 
     @staticmethod
     def command_handle(msg: str, channel_name: str):
@@ -145,7 +136,29 @@ class Bot(commands.Bot):
     async def ping(self, ctx: commands.Context):
         await ctx.send("?나임?")
 
+    @routines.routine(seconds=1)
+    async def join_lookup(self):
+        if len(l) == 0:
+            return
+
+        while len(l) != 0:
+            await self.join_channels([l[0]])
+            print("joined " + l[0])
+            del l[0]
+
 
 if __name__ == "__main__":
-    bot = Bot()
-    bot.run()
+    import multiprocessing as mp
+
+    def front():
+        bot = Bot()
+        bot.run()
+
+    def back():
+        from modules import ipc
+        import time
+
+        mp.Process(target=ipc.init, args=[l]).start()
+
+    back()
+    front()
