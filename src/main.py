@@ -1,7 +1,7 @@
 import sys
 import re
 import os
-from twitchio.ext import commands
+from twitchio.ext import commands, routines
 import twitchio
 from settings import prefix, trustable, is_trustable
 from modules import firebase, twitch
@@ -25,8 +25,19 @@ class Bot(commands.Bot):
         )
 
     async def event_ready(self):
+        import multiprocessing as mp
+
         print(f"Logged in as | {self.nick}")
         print(f"User id is | {self.user_id}")
+
+        from modules import ipc
+        import multiprocessing as mp
+        import asyncio
+
+        mp.Process(
+            target=lambda: ipc.init,
+            args=(mp.Manager().list([self.join_channels])),
+        ).start()
 
     @staticmethod
     def command_handle(msg: str, channel_name: str):
@@ -52,7 +63,11 @@ class Bot(commands.Bot):
         if message.echo:
             return
 
-        await safebrowsing.safebrowsing(message.content, message.channel.send,twitch.username_to_uid(message.channel.name))
+        await safebrowsing.safebrowsing(
+            message.content,
+            message.channel.send,
+            twitch.username_to_uid(message.channel.name),
+        )
         # first, try handling that message with response function.
         # if failed, event_command_error() will be executed, and it will continue processing.
 
@@ -88,17 +103,18 @@ class Bot(commands.Bot):
         await scoring.add(ctx)
 
     @commands.command()
-    async def 링크검열(self,ctx:commands.Context):
+    async def 링크검열(self, ctx: commands.Context):
         if not is_trustable(ctx):
             return
-        uid=twitch.username_to_uid(ctx.channel.name)
-        now=firebase.is_safesbowsing_enabled(uid)
-        if(now):
+        uid = twitch.username_to_uid(ctx.channel.name)
+        now = firebase.is_safesbowsing_enabled(uid)
+        if now:
             firebase.set_safetybrowsing(uid, False)
             await ctx.send("이제 더 이상 위험한 링크를 검사하지 않아요!")
         else:
             firebase.set_safetybrowsing(uid, True)
             await ctx.send("이제부터 위험한 링크를 경고할게요!")
+
     @commands.command()
     async def evalAsDev(self, ctx):
         if ctx.author.name not in trustable:
