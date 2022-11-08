@@ -5,10 +5,10 @@ from base64 import b64decode
 from firebase_admin import credentials
 from firebase_admin import firestore
 import dotenv
+import requests
 
 # init
 dotenv.load_dotenv(verbose=True)
-
 
 # main.py
 prefix = os.environ["PREFIX"]
@@ -36,13 +36,15 @@ app = firebase_admin.initialize_app(
 )
 db = firestore.client()
 
-
 # twitch.py
 token = os.environ["TWITCH_ACCESS_TOKEN"]
 client_id = os.environ.get("TWITCH_CLIENT_ID")
+botname = requests.get("https://id.twitch.tv/oauth2/validate", headers={"Authorization": f"Bearer {token}"}).json()[
+    "login"]
+botid = requests.get("https://id.twitch.tv/oauth2/validate", headers={"Authorization": f"Bearer {token}"}).json()[
+    "user_id"]
 if client_id is None:
     client_id = "gp762nuuoqcoxypju8c569th9wz7q5"
-
 
 # safetybrowsing.py
 safebrowsing_apikey = os.environ["SAFETYBROWSING_KEY"]

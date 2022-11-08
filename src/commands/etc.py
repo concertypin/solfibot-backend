@@ -1,0 +1,1 @@
+def russian_roulette(uid)
