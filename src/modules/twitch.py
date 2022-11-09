@@ -1,13 +1,14 @@
 import requests
 from settings import token, client_id, botid
 import copy
+import json
 
 def ban(uid: int, channel_id: int, timeout: int, reason: str = ""):
     # if timeout==0, uid will be banned.
     # if timeout==1, uid will be unbanned.
     # if not, uid will be timeout.
     endpoint = f"https://api.twitch.tv/helix/moderation/bans?broadcaster_id={channel_id}&moderator_id={botid}"
-    head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
+    head = {"Authorization": f"Bearer {token}", "Client-Id": client_id, "Content-Type":"application/json"}
 
     body = {"user_id": str(uid)}
     if timeout != 0:
@@ -15,8 +16,10 @@ def ban(uid: int, channel_id: int, timeout: int, reason: str = ""):
     if reason != "":
         body["reason"] = reason
     ##WIP todo------------------------------------------
-    return requests.post(endpoint, headers=head, data={"data":body}).json()
+    body["data"]=copy.deepcopy(body)
 
+    r=requests.post(endpoint, headers=head, data=json.dumps(body))
+    return r.json()
 
 def uid_to_username(uid: int) -> str:
     endpoint = f"https://api.twitch.tv/helix/users?id={uid}"
