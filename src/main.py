@@ -140,6 +140,10 @@ class Bot(commands.Bot):
     async def 룰렛(self, ctx: commands.Context):
         await etc.russian_roulette(ctx)
 
+    @commands.command()
+    async def 리더보드(self, ctx: commands.Context):
+        await etc.leaderboard(ctx)
+
     @routines.routine(seconds=1)
     async def join_lookup(self):
         if len(l) == 0:
@@ -164,5 +168,6 @@ if __name__ == "__main__":
 
         mp.Process(target=ipc.init, args=[l]).start()
 
-    back()
+    if os.environ.get("DEV") != 1:
+        back()
     front()

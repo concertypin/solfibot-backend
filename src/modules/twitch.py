@@ -24,7 +24,7 @@ def ban(uid: int, channel_id: int, timeout: int, reason: str = ""):
     body["data"] = copy.deepcopy(body)
 
     r = requests.post(endpoint, headers=head, data=json.dumps(body))
-    if(not r.ok):
+    if not r.ok:
         print(r.status_code)
         print(r.text)
     return r.json()

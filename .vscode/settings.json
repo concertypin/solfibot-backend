@@ -11,7 +11,5 @@
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
     "python.linting.banditEnabled": true,
-    "python.linting.banditArgs": [
-        "-s B311"
-    ]
+    "python.linting.enabled": true
 }

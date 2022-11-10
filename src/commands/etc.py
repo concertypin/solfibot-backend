@@ -15,3 +15,15 @@ async def russian_roulette(ctx: commands.Context):
         t = firebase.get_combo(ctx.author.id)
         firebase.set_combo(ctx.author.id, t + 1)
         await ctx.send(f"찰캌! {t+1}번 살아남으셨습니다!")
+
+
+async def leaderboard(ctx: commands.Context):
+    command=str(ctx.message.content).strip().split(" ")
+    try:
+        max_lookup=int(command[1])
+    except:
+        max_lookup=3
+    ret=""
+    for i in firebase.highest_lookup(max_lookup):
+        ret+=f"{twitch.uid_to_nickname(i[0])}:{i[1]}점, "
+    await ctx.send(ret[:-2])

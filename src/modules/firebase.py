@@ -1,7 +1,8 @@
 from settings import db
+from firebase_admin import firestore
 
 
-def get_combo(uid:int)->int:
+def get_combo(uid: int) -> int:
     ref = db.collection("listener_data").document(str(uid)).get().to_dict()
 
     if ref is None:  # no such user
@@ -12,7 +13,8 @@ def get_combo(uid:int)->int:
 
     return ref.get("roulette_combo")
 
-def set_combo(uid:int, combo:int):
+
+def set_combo(uid: int, combo: int):
     ref = db.collection("listener_data").document(str(uid))
     ref.set({"roulette_combo": combo}, merge=True)
 
@@ -91,3 +93,15 @@ def is_safesbowsing_enabled(channel_id: int) -> bool:
 def set_safetybrowsing(channel_id: int, stat: bool):
     ref = db.collection("streamer_data").document(str(channel_id))
     ref.set({"safety_browsing": stat}, merge=True)
+
+
+def highest_lookup(max_result: int = 3) -> dict:
+    ref = (
+        db.collection("listener_data")
+        .order_by("roulette_combo", direction=firestore.Query.DESCENDING)
+        .limit(max_result)
+    )
+    ret = []
+    for i in ref.get():
+        ret.append([int(i.id), i.to_dict()["roulette_combo"]])  # [int(id), int(value)]
+    return ret

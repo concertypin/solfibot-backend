@@ -37,14 +37,14 @@ async def lookup(target_url: str):
     return None
 
 
-async def safebrowsing(msg,sender,uid):
+async def safebrowsing(msg, sender, uid):
     if not firebase.is_safesbowsing_enabled(uid):
         return
     t = is_url(msg)
     if t is None:
         return
     for i in t:
-        m=await lookup(i)
+        m = await lookup(i)
         if m is not None:
             await sender(f"위험한 사이트 같아요! 조심하세요! {m} 사이트라고 보고되었어요!")
             return

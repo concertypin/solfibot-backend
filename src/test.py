@@ -107,13 +107,16 @@ class SafetyBrowsingTest(TestCase):
 
     def test_write_firebase_status(cls):
         from modules import firebase
+
         firebase.set_safetybrowsing(test_uid, False)
         cls.assertEqual(firebase.is_safesbowsing_enabled(test_uid), False)
-    
+
     @classmethod
     def tearDownClass(cls):
         from modules import firebase
+
         firebase.set_safetybrowsing(test_uid, True)
+
 
 if __name__ == "__main__":
     main()

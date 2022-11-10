@@ -17,6 +17,7 @@
   - PREFIX : Prefix of internal functions. If lenght of PREFIX is not 1(or non-ascii character), this might not run properly.
   - TRUSTABLE_USER : Comma-seperated twitch user login ID whose channel will be joined by the bot. this user can access to all of commands and server resource (via ...AsDev command). This is optional. If there isn't value, only moderators can use admin commands.
   - SAFETYBROWSING_KEY : Google Safe Browsing API key.
+  - DEV : Optional. If it is 1, frontend connection layer will be disabled.
 
 ## Standalone
 
