@@ -1,6 +1,22 @@
 from settings import db
 
 
+def get_combo(uid:int)->int:
+    ref = db.collection("listener_data").document(str(uid)).get().to_dict()
+
+    if ref is None:  # no such user
+        return 0
+
+    if ref.get("roulette_combo") is None:
+        return 0
+
+    return ref.get("roulette_combo")
+
+def set_combo(uid:int, combo:int):
+    ref = db.collection("listener_data").document(str(uid))
+    ref.set({"roulette_combo": combo}, merge=True)
+
+
 def get_score_map(uid: int) -> dict:
     ref = db.collection("listener_data").document(str(uid)).get().to_dict()
 

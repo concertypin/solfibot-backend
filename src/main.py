@@ -5,7 +5,7 @@ from twitchio.ext import commands, routines
 import twitchio
 from settings import prefix, trustable, is_trustable
 from modules import firebase, twitch
-from commands import commanding, safebrowsing, scoring
+from commands import commanding, safebrowsing, scoring, etc
 import multiprocessing as mp
 
 trim_paimon = re.compile(" HungryPaimon")
@@ -135,6 +135,10 @@ class Bot(commands.Bot):
     @commands.command()
     async def ping(self, ctx: commands.Context):
         await ctx.send("?나임?")
+
+    @commands.command()
+    async def 룰렛(self, ctx: commands.Context):
+        await etc.russian_roulette(ctx)
 
     @routines.routine(seconds=1)
     async def join_lookup(self):
