@@ -8,7 +8,7 @@
 - [Firestore](https://firebase.google.com/products/firestore)와 Admin SDK JSON 파일
 
 - 환경변수
-    - TWITCH_ACCESS_TOKEN : 트위치 토큰. Scope로 `user:read:email+chat:read+chat:edit` 가 있어야 합니다. ([이곳에서](https://twitchtokengenerator.com/quick/o4qKOhbSmI) 생성할 수 있습니다.)
+    - TWITCH_ACCESS_TOKEN : 트위치 토큰. Scope로 `user:read:email+chat:read+chat:edit` 가 있어야 합니다. ([이곳에서](https://twitchtokengenerator.com/quick/pKhk2koNES) 생성할 수 있습니다.)
 
     - FIREBASE_CREDENTIAL : Base64 인코딩된 Firebase Admin SDK JSON 파일
     - TWITCH_CLIENT_ID : Twitch 토큰의 Client ID. 생략할 수 있습니다. 기본값은 `gp762nuuoqcoxypju8c569th9wz7q5` 입니다. ([twitchtokengenerator.com]()의 기본 토큰)
@@ -19,7 +19,7 @@
 Standalone
 ---
 Debian 또는 Ubuntu:
-1. `git clone https://github.com/konfani/schoolScore && cd schoolScore`로 레포를 클론하고 디렉터리로 이동합니다.
+1. `git clone https://github.com/konfani/solfibot-backend && cd solfibot-backend`로 레포를 클론하고 디렉터리로 이동합니다.
 2. 환경 변수를 설정합니다. 현재 디렉터리에 있는 .env 파일로도 설정 가능합니다.
 3. `pip install -r requirements.txt`를 이용해 종속성을 설치합니다. 실행 시 가상 환경 사용을 강력히 권장합니다.
 4. `python3 src/main.py`로 프로그램을 실행합니다.
@@ -27,9 +27,9 @@ Debian 또는 Ubuntu:
 Docker
 ---
 ```
-git clone https://github.com/konfani/schoolScore && cd schoolScore && docker build -t schoolscore:latest
+git clone https://github.com/konfani/solfibot-backend && cd solfibot-backend && docker build -t solfibotbackend:latest
 
-docker run -it -e TWITCH_ACCESS_TOKEN=<YOUR_TOKEN> -e FIREBASE_CREDENTIAL=<YOUR_CREDENTIAL> -e PREFIX=<PREFIX> -e TARGET=<TARGET> schoolscore
+docker run -it -e TWITCH_ACCESS_TOKEN=<YOUR_TOKEN> -e FIREBASE_CREDENTIAL=<YOUR_CREDENTIAL> -e PREFIX=<PREFIX> -e TARGET=<TARGET> -e SAFETYBROWSING_KEY=<SAFETYBROWSING_KEY> -e TRUSTABLE_USER=<TRUSTABLE_USER> -p 8000:8000 solfibotbackend
 ```
 환경 변수는 .env file이나 Docker 옵션으로 넘길 수 있습니다.
 
@@ -46,3 +46,4 @@ docker run -it -e TWITCH_ACCESS_TOKEN=<YOUR_TOKEN> -e FIREBASE_CREDENTIAL=<YOUR_
     - `execAsDev <cmd>` : 파이썬에서 `<cmd>`를 실행합니다. TRUSTABLE_USER만 이 명령어를 실행할 수 있습니다.
     - `ping` : `?나임?`을 출력합니다. 이 명령어는 모두 사용할 수 있습니다.
     - `링크검열` : 위험한 링크 경고를 토글합니다. 기본값은 경고하지 않습니다.
+    - `룰렛` : 6분의 1 확률로 `탕!` 메세지를 출력하고 전송자를 5초 동안 `러시안 룰렛당해버린`이라는 이유로 타임아웃합니다.

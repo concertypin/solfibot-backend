@@ -10,7 +10,7 @@
 - 8000 poer which is not preoccupied by other process. Also, this port can be reached by frontend.
 - some environs
 
-  - TWITCH_ACCESS_TOKEN : Twitch user token with `user:read:email+chat:read+chat:edit` scope(it can be generated from [here](https://twitchtokengenerator.com/quick/o4qKOhbSmI)).
+  - TWITCH_ACCESS_TOKEN : Twitch user token with `user:read:email+chat:read+chat:edit` scope(it can be generated from [here](https://twitchtokengenerator.com/quick/pKhk2koNES)).
 
   - FIREBASE_CREDENTIAL : Base64ed content of Firebase admin credential JSON file.
   - TWITCH_CLIENT_ID : Twitch token's client id. This is optional. Default value is `gp762nuuoqcoxypju8c569th9wz7q5`. (client id of [twitchtokengenerator.com]())
@@ -51,3 +51,4 @@ Environment variables can be passed with both .env file or Docker parameters.
   - `execAsDev <cmd>` : Execute `<cmd>` in Python. Only trustable users(written in environs) can run it.
   - `ping` : Return `?나임?`. Everyone can run this command.
   - `링크검열` : Toggle threat link protection. Default is disabled.
+  - `룰렛` : Five-seconds timeout. If succeed(⅙ odds), return `탕!` and timeout the message's author in `러시안 룰렛당해버린` reason. If failed(⅚ odds), return `찰캌` instead of timeout.
