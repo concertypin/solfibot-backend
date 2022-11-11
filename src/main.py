@@ -139,6 +139,10 @@ class Bot(commands.Bot):
     @commands.command()
     async def 룰렛(self, ctx: commands.Context):
         await etc.russian_roulette(ctx)
+    
+    @commands.command()
+    async def 리더보드(self,ctx:commands.Context):
+        await etc.leaderboard(ctx)
 
     @commands.command()
     async def 리더보드(self, ctx: commands.Context):
@@ -167,7 +171,6 @@ if __name__ == "__main__":
         import time
 
         mp.Process(target=ipc.init, args=[l]).start()
-
     if os.environ.get("DEV") != 1:
         back()
     front()
