@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM pypy:3.9
 
 EXPOSE 8000
 WORKDIR /home/ubuntu/schoolScore
