@@ -5,4 +5,3 @@ firebase-admin
 pysafebrowsing
 fastapi[all]
 uvicorn
-numba
