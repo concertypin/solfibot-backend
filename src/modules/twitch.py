@@ -1,14 +1,17 @@
-import requests
-from settings import token, client_id, botid
 import copy
 import json
+from numba import jit
+
+import requests
+
+from settings import botid, client_id, token
 
 
 def ban(uid: int, channel_id: int, timeout: int, reason: str = ""):
     # if timeout==0, uid will be banned.
     # if timeout==1, uid will be unbanned.
     # if not, uid will be timeout.
-    endpoint = f"https://api.twitch.tv/helix/moderation/bans?broadcaster_id={channel_id}&moderator_id={botid}"
+    endpoint = "https://api.twitch.tv/helix/moderation/bans"
     head = {
         "Authorization": f"Bearer {token}",
         "Client-Id": client_id,
@@ -23,32 +26,42 @@ def ban(uid: int, channel_id: int, timeout: int, reason: str = ""):
     ##WIP todo------------------------------------------
     body["data"] = copy.deepcopy(body)
 
-    r = requests.post(endpoint, headers=head, data=json.dumps(body))
-    if not r.ok:
-        print(r.status_code)
-        print(r.text)
-    return r.json()
+    response = requests.post(
+        endpoint,
+        headers=head,
+        data=json.dumps(body),
+        params={"broadcaster_id": channel_id, "moderator_id": botid},
+        timeout=5,
+    )
+
+    if not response.ok:
+        print(response.status_code)
+        print(response.text)
+    return response.json()
 
 
+@jit(nopython=True, cache=True)
 def uid_to_username(uid: int) -> str:
     endpoint = f"https://api.twitch.tv/helix/users?id={uid}"
     head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
 
-    r = requests.get(endpoint, headers=head).json()
-    return r["data"][0]["login"]
+    response = requests.get(endpoint, headers=head, timeout=5).json()
+    return response["data"][0]["login"]
 
 
+@jit(nopython=True, cache=True)
 def uid_to_nickname(uid: int) -> str:
     endpoint = f"https://api.twitch.tv/helix/users?id={uid}"
     head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
 
-    r = requests.get(endpoint, headers=head).json()
-    return r["data"][0]["display_name"]
+    response = requests.get(endpoint, headers=head, timeout=5).json()
+    return response["data"][0]["display_name"]
 
 
+@jit(nopython=True, cache=True)
 def username_to_uid(username: str) -> int:
     endpoint = f"https://api.twitch.tv/helix/users?login={username}"
     head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
 
-    r = requests.get(endpoint, headers=head).json()
-    return r["data"][0]["id"]
+    response = requests.get(endpoint, headers=head, timeout=5).json()
+    return response["data"][0]["id"]
