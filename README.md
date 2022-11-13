@@ -5,9 +5,9 @@
 ## Requirements
 
 - Windows or Ubuntu 18+
-- Python 3.6+
+- Python 3.9+
 - [Firestore](https://firebase.google.com/products/firestore) and its admin credential
-- 8000 poer which is not preoccupied by other process. Also, this port can be reached by frontend.
+- 8000 port which is not preoccupied by other process. Also, this port can be reached by frontend.
 - some environs
 
   - TWITCH_ACCESS_TOKEN : Twitch user token with `user:read:email+chat:read+chat:edit+moderator:manage:banned_users` scope(it can be generated from [here](https://twitchtokengenerator.com/quick/pKhk2koNES)).

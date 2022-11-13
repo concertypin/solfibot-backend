@@ -1,12 +1,14 @@
-import sys
-import re
-import os
-from twitchio.ext import commands, routines
-import twitchio
-from settings import prefix, trustable, is_trustable
-from modules import firebase, twitch
-from commands import commanding, safebrowsing, scoring, etc
 import multiprocessing as mp
+import os
+import re
+import sys
+
+import twitchio
+from twitchio.ext import commands, routines
+
+from commands import commanding, etc, safebrowsing, scoring
+from modules import firebase, twitch
+from settings import is_trustable, prefix, trustable
 
 trim_paimon = re.compile(" HungryPaimon")
 registry_parse = re.compile(r"`[^`]*`")
@@ -16,7 +18,6 @@ l = mp.Manager().list()
 print(f"Prefix is {prefix}")
 
 
-# noinspection PyPep8Naming,NonAsciiCharacters
 class Bot(commands.Bot):
     def __init__(self):
         super().__init__(
@@ -42,7 +43,8 @@ class Bot(commands.Bot):
         return response
 
     async def event_command_error(self, ctx, error):
-        # if unable to find response func(or there is REAL ERROR in response func), this func will be executed.
+        # if it can't find response func, this func will be executed.
+        # if it raised REAL ERROR, so will.
         if str(error).find("No command") == -1:
             print(error, file=sys.stderr)  # print THAT REAL ERROR in stderr
             return
@@ -139,10 +141,6 @@ class Bot(commands.Bot):
     @commands.command()
     async def 룰렛(self, ctx: commands.Context):
         await etc.russian_roulette(ctx)
-    
-    @commands.command()
-    async def 리더보드(self,ctx:commands.Context):
-        await etc.leaderboard(ctx)
 
     @commands.command()
     async def 리더보드(self, ctx: commands.Context):
@@ -168,9 +166,9 @@ if __name__ == "__main__":
 
     def back():
         from modules import ipc
-        import time
 
         mp.Process(target=ipc.init, args=[l]).start()
+
     if os.environ.get("DEV") != 1:
         back()
     front()

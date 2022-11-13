@@ -15,4 +15,4 @@ def init(joinch):
     global join_channels
     join_channels = joinch
     print("ipc server is starting:")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, port=8000)
