@@ -1,7 +1,6 @@
 import copy
 import json
-from numba import jit
-
+from functools import lru_cache
 import requests
 
 from settings import botid, client_id, token
@@ -40,7 +39,7 @@ def ban(uid: int, channel_id: int, timeout: int, reason: str = ""):
     return response.json()
 
 
-@jit(cache=True)
+@lru_cache
 def uid_to_username(uid: int) -> str:
     endpoint = f"https://api.twitch.tv/helix/users?id={uid}"
     head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
@@ -49,7 +48,7 @@ def uid_to_username(uid: int) -> str:
     return response["data"][0]["login"]
 
 
-@jit(cache=True)
+@lru_cache
 def uid_to_nickname(uid: int) -> str:
     endpoint = f"https://api.twitch.tv/helix/users?id={uid}"
     head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
@@ -58,7 +57,7 @@ def uid_to_nickname(uid: int) -> str:
     return response["data"][0]["display_name"]
 
 
-@jit(cache=True)
+@lru_cache
 def username_to_uid(username: str) -> int:
     endpoint = f"https://api.twitch.tv/helix/users?login={username}"
     head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
