@@ -40,7 +40,7 @@ def ban(uid: int, channel_id: int, timeout: int, reason: str = ""):
     return response.json()
 
 
-@jit(nopython=True, cache=True)
+@jit(cache=True)
 def uid_to_username(uid: int) -> str:
     endpoint = f"https://api.twitch.tv/helix/users?id={uid}"
     head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
@@ -49,7 +49,7 @@ def uid_to_username(uid: int) -> str:
     return response["data"][0]["login"]
 
 
-@jit(nopython=True, cache=True)
+@jit(cache=True)
 def uid_to_nickname(uid: int) -> str:
     endpoint = f"https://api.twitch.tv/helix/users?id={uid}"
     head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
@@ -58,7 +58,7 @@ def uid_to_nickname(uid: int) -> str:
     return response["data"][0]["display_name"]
 
 
-@jit(nopython=True, cache=True)
+@jit(cache=True)
 def username_to_uid(username: str) -> int:
     endpoint = f"https://api.twitch.tv/helix/users?login={username}"
     head = {"Authorization": f"Bearer {token}", "Client-Id": client_id}
