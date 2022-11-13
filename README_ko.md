@@ -8,7 +8,7 @@
 - [Firestore](https://firebase.google.com/products/firestore)와 Admin SDK JSON 파일
 
 - 환경변수
-    - TWITCH_ACCESS_TOKEN : 트위치 토큰. Scope로 `user:read:email+chat:read+chat:edit` 가 있어야 합니다. ([이곳에서](https://twitchtokengenerator.com/quick/pKhk2koNES) 생성할 수 있습니다.)
+    - TWITCH_ACCESS_TOKEN : 트위치 토큰. Scope로 `user:read:email+chat:read+chat:edit+moderator:manage:banned_users` 가 있어야 합니다. ([이곳에서](https://twitchtokengenerator.com/quick/pKhk2koNES) 생성할 수 있습니다.)
 
     - FIREBASE_CREDENTIAL : Base64 인코딩된 Firebase Admin SDK JSON 파일
     - TWITCH_CLIENT_ID : Twitch 토큰의 Client ID. 생략할 수 있습니다. 기본값은 `gp762nuuoqcoxypju8c569th9wz7q5` 입니다. ([twitchtokengenerator.com]()의 기본 토큰)

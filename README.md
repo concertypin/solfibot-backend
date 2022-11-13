@@ -10,7 +10,7 @@
 - 8000 poer which is not preoccupied by other process. Also, this port can be reached by frontend.
 - some environs
 
-  - TWITCH_ACCESS_TOKEN : Twitch user token with `user:read:email+chat:read+chat:edit` scope(it can be generated from [here](https://twitchtokengenerator.com/quick/pKhk2koNES)).
+  - TWITCH_ACCESS_TOKEN : Twitch user token with `user:read:email+chat:read+chat:edit+moderator:manage:banned_users` scope(it can be generated from [here](https://twitchtokengenerator.com/quick/pKhk2koNES)).
 
   - FIREBASE_CREDENTIAL : Base64ed content of Firebase admin credential JSON file.
   - TWITCH_CLIENT_ID : Twitch token's client id. This is optional. Default value is `gp762nuuoqcoxypju8c569th9wz7q5`. (client id of [twitchtokengenerator.com]())
