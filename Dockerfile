@@ -4,8 +4,7 @@ EXPOSE 8000
 WORKDIR /home/ubuntu/schoolScore
 
 COPY requirements.txt ./
-RUN apt update
-RUN apt install cargo rustc -y
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
