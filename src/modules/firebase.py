@@ -2,9 +2,8 @@ import time
 
 from google.cloud import firestore
 
-from settings import db
+from settings import db, max_bonk
 
-max_bonk = 2
 
 
 class RouletteWasBlockedError(Exception):
@@ -29,6 +28,8 @@ def get_combo(uid: int) -> int:
 def is_roulettable(uid: int, now_bonk: int) -> bool:
     if now_bonk is None:
         now_bonk = 0
+    if max_bonk is None:
+        return True
     return max_bonk >= now_bonk
 
 

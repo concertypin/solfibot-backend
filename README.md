@@ -18,6 +18,7 @@
   - TRUSTABLE_USER : Comma-seperated twitch user login ID whose channel will be joined by the bot. this user can access to all of commands and server resource (via ...AsDev command). This is optional. If there isn't value, only moderators can use admin commands.
   - SAFETYBROWSING_KEY : Google Safe Browsing API key.
   - DEV : Optional. If it is 1, frontend connection layer will be disabled.
+  - MAX_BONK : Limit `?룰렛` command. If it isn't set, `?룰렛` limitation will be disabled. Else `?룰렛` will be unusabled if a user was timeouted MAX_BONK times.
 
 ## Standalone
 
