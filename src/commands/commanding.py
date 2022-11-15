@@ -1,7 +1,7 @@
-from settings import is_trustable, prefix
-from modules import twitch
-from modules import firebase
 from twitchio.ext import commands
+
+from modules import firebase, twitch
+from settings import is_trustable, prefix
 
 
 async def register(ctx: commands.Context):
@@ -9,7 +9,10 @@ async def register(ctx: commands.Context):
         return
     print(ctx.author.name, "->", ctx.message.content)
     msg = str(ctx.message.content)
-    error_msg = f"명령어는 '{prefix}등록 등록할명령어 대답할단어' 식이에요. 명령어나 단어 사이에 띄어쓰기가 있다면, 그 명령어나 단어를 ` 문자로 감싸주세요!"
+    error_msg = (
+        f"명령어는 '{prefix}등록 등록할명령어 대답할단어' 식이에요."
+        + "명령어나 단어 사이에 띄어쓰기가 있다면, 그 명령어나 단어를 ` 문자로 감싸주세요!"
+    )
 
     # parsing
     try:
@@ -41,13 +44,11 @@ async def register(ctx: commands.Context):
                 else:
                     response = i
 
-    except:
+    except (IndexError, ValueError):
         await ctx.send(error_msg)
         return
-    try:
-        if command == "" or response == "":
-            raise Exception
-    except:
+
+    if command == "" or response == "":
         await ctx.send(error_msg)
         return
 
@@ -64,7 +65,7 @@ async def delete(ctx: commands.Context):
     print(ctx.author.name, "->", ctx.message.content)
     try:
         command = " ".join(ctx.message.content.split(" ")[1:])
-    except:
+    except (IndentationError, ValueError):
         await ctx.send(f"명령어는 '{prefix}삭제 지울명령어' 식이에요.")
         return
     firebase.delete_command(twitch.username_to_uid(ctx.channel.name), command)
