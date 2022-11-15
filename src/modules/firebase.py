@@ -1,7 +1,10 @@
+import time
+
 from google.cloud import firestore
 
 from settings import db
 
+max_bonk=2
 
 def get_combo(uid: int) -> int:
     ref = db.collection("listener_data").document(str(uid)).get().to_dict()
@@ -15,9 +18,48 @@ def get_combo(uid: int) -> int:
     return ref.get("roulette_combo")
 
 
+def is_roulettable(uid: int) -> bool:
+    ref = db.collection("listener_data").document(str(uid)).get().to_dict()
+
+    now_bonk = ref.get("now_bonk")
+    if now_bonk is None:
+        now_bonk = 0
+    return max_bonk >= now_bonk
+
+
 def set_combo(uid: int, combo: int):
     ref = db.collection("listener_data").document(str(uid))
-    ref.set({"roulette_combo": combo}, merge=True)
+    data = {"roulette_combo": combo}
+    if combo == 0:  # bomb
+        remote_data = ref.get().to_dict()
+        if remote_data.get("now_bonk") is None:
+            now_bonk = 1
+        else:
+            now_bonk = remote_data["now_bonk"]
+
+        t = time.time()
+        if remote_data.get("last_bonk") is None:
+            last_bonk = 0
+        else:
+            last_bonk = remote_data["last_bonk"]
+
+        if t - 60 * 60 * 24 > last_bonk:  # lastBonk.time < yesterday
+            now_bonk = 1
+
+        data["last_bonk"] = t
+        data["now_bonk"] = now_bonk
+
+    else:
+        if is_roulettable(uid) is True:
+            raise Exception
+        remote_data = ref.get().to_dict()
+        if remote_data.get("now_bonk") is None:
+            now_bonk = 2
+        else:
+            now_bonk = remote_data["now_bonk"]+1
+        data["now_bonk"]=now_bonk
+    
+    ref.set(data, merge=True)
 
 
 def get_score_map(uid: int) -> dict:

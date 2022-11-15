@@ -158,7 +158,6 @@ class Bot(commands.Bot):
 
 
 if __name__ == "__main__":
-    import multiprocessing as mp
 
     def front():
         bot = Bot()
