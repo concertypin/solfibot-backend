@@ -1,6 +1,17 @@
+import time
+
 from google.cloud import firestore
 
 from settings import db
+
+max_bonk = 2
+
+
+class RouletteWasBlockedError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+
 
 
 def get_combo(uid: int) -> int:
@@ -15,9 +26,56 @@ def get_combo(uid: int) -> int:
     return ref.get("roulette_combo")
 
 
+def is_roulettable(uid: int, now_bonk: int) -> bool:
+    if now_bonk is None:
+        now_bonk = 0
+    return max_bonk >= now_bonk
+
+
 def set_combo(uid: int, combo: int):
     ref = db.collection("listener_data").document(str(uid))
-    ref.set({"roulette_combo": combo}, merge=True)
+    data = {"roulette_combo": combo}  # it will be written
+
+    if combo == 0:  # bomb
+        remote_data = ref.get().to_dict()
+
+        # now_bonk is uid's bonk combo(like B2B of tetris). it will be reseted when cooltime(one day) was rotated.
+        if remote_data.get("now_bonk") is None:
+            now_bonk = 1
+        else:
+            now_bonk = remote_data["now_bonk"] + 1
+
+        # last_bonk is the latest bonk time. if is_roulettable(uid,now bonk) is Fasle, it will be the time when roulette was blocked.
+        t = time.time()
+        if remote_data.get("last_bonk") is None:
+            last_bonk = 0
+        else:
+            last_bonk = remote_data["last_bonk"]
+
+        # lastBonk.time < yesterday (is cooltime was rotated)
+        if last_bonk < t - 1000 * 60 * 60 * 24:
+            now_bonk = 1
+
+        if not is_roulettable(uid, now_bonk):
+            raise RouletteWasBlockedError  # raise exception to get out of here
+
+        data["last_bonk"] = t
+        data["now_bonk"] = now_bonk
+
+    else:
+        remote_data = ref.get().to_dict()
+
+        now_bonk = remote_data.get("now_bonk")
+        if now_bonk is None:
+            now_bonk = 0
+
+        # is cooltime wasn't rotated and roulette was blocked
+        if not is_roulettable(uid, now_bonk):
+            raise Exception
+
+        data["now_bonk"] = now_bonk
+
+    ref.set(data, merge=True)
 
 
 def get_score_map(uid: int) -> dict:
@@ -36,9 +94,9 @@ def get_score(uid: int, channel_uid: int) -> int:
     score_map = get_score_map(uid)
     if score_map is {}:
         return 0
-    if (
-        score_map.get(str(channel_uid)) is None
-    ):  # user hasn't been scored in that channel
+
+    # user hasn't been scored in that channel
+    if score_map.get(str(channel_uid)) is None:
         return 0
     return score_map.get(str(channel_uid))
 

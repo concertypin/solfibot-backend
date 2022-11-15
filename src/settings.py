@@ -40,10 +40,14 @@ db = firestore.client()
 token = os.environ["TWITCH_ACCESS_TOKEN"]
 client_id = os.environ.get("TWITCH_CLIENT_ID")
 botname = requests.get(
-    "https://id.twitch.tv/oauth2/validate", headers={"Authorization": f"Bearer {token}"}, timeout=5
+    "https://id.twitch.tv/oauth2/validate",
+    headers={"Authorization": f"Bearer {token}"},
+    timeout=5,
 ).json()["login"]
 botid = requests.get(
-    "https://id.twitch.tv/oauth2/validate", headers={"Authorization": f"Bearer {token}"}, timeout=5
+    "https://id.twitch.tv/oauth2/validate",
+    headers={"Authorization": f"Bearer {token}"},
+    timeout=5,
 ).json()["user_id"]
 if client_id is None:
     client_id = "gp762nuuoqcoxypju8c569th9wz7q5"

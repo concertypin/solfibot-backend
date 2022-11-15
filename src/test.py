@@ -1,5 +1,5 @@
-from unittest import TestCase, main
 from base64 import b64decode
+from unittest import TestCase, main
 
 test_username = "testUsername"
 test_uid = 999999
@@ -40,6 +40,7 @@ class FirebaseScoreTest(TestCase):
 
     def test_writing_something(self):
         import random
+
         from src.modules import firebase
 
         obj = random.sample([random.randint(-100, -1), random.randint(1, 100)], 1)[0]
@@ -57,8 +58,9 @@ class FirebaseCommandsTest(TestCase):
         return commands
 
     def test_writing_command(self):
-        from src.modules import firebase
         import random
+
+        from src.modules import firebase
 
         command = "_test_" + str(+random.randint(0, 65535))
         response = "test:" + str(random.randint(0, 65535))
@@ -89,6 +91,7 @@ class FirebaseCommandsTest(TestCase):
 class SafetyBrowsingTest(TestCase):
     def test_phishing_lookup(cls):
         import asyncio
+
         from commands import safebrowsing as sb
 
         res = asyncio.run(sb.lookup(phishing_link))

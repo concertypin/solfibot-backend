@@ -1,6 +1,7 @@
+from firebase_admin import exceptions
 from twitchio.ext import commands
-from modules import twitch
-from modules import firebase
+
+from modules import firebase, twitch
 from settings import is_trustable, prefix
 
 
@@ -15,13 +16,13 @@ async def add(ctx: commands.Context):
         uid = twitch.username_to_uid(username)
 
         score = firebase.get_score(uid, channel_uid) + score_offset
-    except:
+    except (IndexError, ValueError):
         await ctx.send(f"...뭐라고요? 문법은 {prefix}add <유저ID> <점수> 식이에요.")
         return
 
     try:
         firebase.write_score(uid, channel_uid, score, username)
-    except:
+    except exceptions.FirebaseError:
         await ctx.send("...왜 버그가 났죠? 어? 어어?")
         return
     await ctx.send(f"이제 {username}님의 학점은 {score}이에요!")

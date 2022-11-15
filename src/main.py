@@ -31,6 +31,16 @@ class Bot(commands.Bot):
         print(f"User id is | {self.user_id}")
         self.join_lookup.start()
 
+    @routines.routine(seconds=1)
+    async def join_lookup(self):
+        if len(l) == 0:
+            return
+
+        while len(l) != 0:
+            await self.join_channels([l[0]])
+            print("joined " + l[0])
+            del l[0]
+
     @staticmethod
     def command_handle(msg: str, channel_name: str):
         channel_uid = twitch.username_to_uid(channel_name)
@@ -42,15 +52,15 @@ class Bot(commands.Bot):
             return
         return response
 
-    async def event_command_error(self, ctx, error):
+    async def event_command_error(self, context: commands, error):
         # if it can't find response func, this func will be executed.
         # if it raised REAL ERROR, so will.
         if str(error).find("No command") == -1:
             print(error, file=sys.stderr)  # print THAT REAL ERROR in stderr
             return
-        res = self.command_handle(ctx.message.content, ctx.channel.name)
+        res = self.command_handle(context.message.content, context.channel.name)
         if res is not None:
-            await ctx.send(res)
+            await context.send(res)
 
     async def event_message(self, message: twitchio.message.Message):
         if message.echo:
@@ -146,19 +156,8 @@ class Bot(commands.Bot):
     async def 리더보드(self, ctx: commands.Context):
         await etc.leaderboard(ctx)
 
-    @routines.routine(seconds=1)
-    async def join_lookup(self):
-        if len(l) == 0:
-            return
-
-        while len(l) != 0:
-            await self.join_channels([l[0]])
-            print("joined " + l[0])
-            del l[0]
-
 
 if __name__ == "__main__":
-    import multiprocessing as mp
 
     def front():
         bot = Bot()
@@ -169,6 +168,6 @@ if __name__ == "__main__":
 
         mp.Process(target=ipc.init, args=[l]).start()
 
-    if os.environ.get("DEV") != 1:
+    if os.environ.get("DEV") != "1":
         back()
     front()
