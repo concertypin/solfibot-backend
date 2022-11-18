@@ -5,7 +5,6 @@ from google.cloud import firestore
 from settings import db, max_bonk
 
 
-
 class RouletteWasBlockedError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
@@ -23,7 +22,7 @@ def get_combo(uid: int) -> int:
     return ref.get("roulette_combo")
 
 
-def is_roulettable(uid: int, now_bonk: int) -> bool:
+def is_roulettable(now_bonk: int) -> bool:
     if now_bonk is None:
         now_bonk = 0
     if max_bonk is None:
@@ -57,7 +56,7 @@ def set_combo(uid: int, combo: int):
         if last_bonk < t - 1000 * 60 * 60 * 24:
             now_bonk = 1
 
-        if not is_roulettable(uid, now_bonk):
+        if not is_roulettable(now_bonk):
             raise RouletteWasBlockedError  # raise exception to get out of here
 
         data["last_bonk"] = t
@@ -69,7 +68,7 @@ def set_combo(uid: int, combo: int):
             now_bonk = 0
 
         # is cooltime wasn't rotated and roulette was blocked
-        if not is_roulettable(uid, now_bonk):
+        if not is_roulettable(now_bonk):
             raise Exception
 
         data["now_bonk"] = now_bonk
