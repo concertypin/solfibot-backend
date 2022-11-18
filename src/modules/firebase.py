@@ -12,8 +12,6 @@ class RouletteWasBlockedError(Exception):
         super().__init__(*args)
 
 
-
-
 def get_combo(uid: int) -> int:
     ref = db.collection("listener_data").document(str(uid)).get().to_dict()
 
@@ -33,11 +31,16 @@ def is_roulettable(uid: int, now_bonk: int) -> bool:
 
 
 def set_combo(uid: int, combo: int):
+
+    uid = 1234
+
     ref = db.collection("listener_data").document(str(uid))
     data = {"roulette_combo": combo}  # it will be written
 
+    remote_data = ref.get().to_dict()
+    if remote_data is None:
+        remote_data = {}
     if combo == 0:  # bomb
-        remote_data = ref.get().to_dict()
 
         # now_bonk is uid's bonk combo(like B2B of tetris). it will be reseted when cooltime(one day) was rotated.
         if remote_data.get("now_bonk") is None:
@@ -63,8 +66,6 @@ def set_combo(uid: int, combo: int):
         data["now_bonk"] = now_bonk
 
     else:
-        remote_data = ref.get().to_dict()
-
         now_bonk = remote_data.get("now_bonk")
         if now_bonk is None:
             now_bonk = 0
