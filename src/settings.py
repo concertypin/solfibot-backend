@@ -37,6 +37,8 @@ app = firebase_admin.initialize_app(
 db = firestore.client()
 
 max_bonk=os.environ.get("MAX_BONK")
+if max_bonk is not None:
+    max_bonk=int(max_bonk)
 
 # twitch.py
 token = os.environ["TWITCH_ACCESS_TOKEN"]
