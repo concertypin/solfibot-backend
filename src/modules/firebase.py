@@ -32,9 +32,6 @@ def is_roulettable(uid: int, now_bonk: int) -> bool:
 
 
 def set_combo(uid: int, combo: int):
-
-    uid = 1234
-
     ref = db.collection("listener_data").document(str(uid))
     data = {"roulette_combo": combo}  # it will be written
 
