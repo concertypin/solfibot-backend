@@ -27,7 +27,7 @@ def is_roulettable(now_bonk: int) -> bool:
         now_bonk = 0
     if max_bonk is None:
         return True
-    return max_bonk >= now_bonk
+    return max_bonk > now_bonk
 
 
 def set_combo(uid: int, combo: int):
@@ -56,7 +56,7 @@ def set_combo(uid: int, combo: int):
         if last_bonk < t - 1000 * 60 * 60 * 24:
             now_bonk = 1
 
-        if not is_roulettable(now_bonk):
+        if not is_roulettable(now_bonk - 1):
             raise RouletteWasBlockedError  # raise exception to get out of here
 
         data["last_bonk"] = t
@@ -69,7 +69,7 @@ def set_combo(uid: int, combo: int):
 
         # is cooltime wasn't rotated and roulette was blocked
         if not is_roulettable(now_bonk):
-            raise Exception
+            raise RouletteWasBlockedError
 
         data["now_bonk"] = now_bonk
 
