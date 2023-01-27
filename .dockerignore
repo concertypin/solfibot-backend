@@ -1,6 +1,0 @@
-.devcontainer/*
-.github/*
-*.md
-*.yml
-.gitignore
-.pylintrc
