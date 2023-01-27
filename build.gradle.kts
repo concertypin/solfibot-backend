@@ -1,6 +1,7 @@
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.7.10"
-    application
+    id("application")
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 repositories {
@@ -23,4 +24,17 @@ application {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.jar {
+    manifest.attributes["Main-Class"] = "MainKt"
+}
+tasks.jar {
+    manifest.attributes["Main-Class"] = "com.example.MyMainClass"
+    manifest.attributes["Class-Path"] = configurations
+        .runtimeClasspath
+        .get()
+        .joinToString(separator = " ") { file ->
+            "libs/${file.name}"
+        }
 }
