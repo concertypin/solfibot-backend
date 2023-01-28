@@ -16,7 +16,8 @@ val auth=AuthToken(
     if (System.getenv("DOCKER")!="1")
         System.getenv("TWITCH_TOKEN")
     else
-        Files.readString(Paths.get("/run/secrets/TWITCH_TOKEN"))
+        Files.readString(Paths.get("/run/secrets/TWITCH_TOKEN")),
+    "", ""
 )
 
 fun main()
@@ -29,7 +30,7 @@ fun main()
 }
 
 
-class Chatbot(private val prefix: String, private val credential:AuthToken) {
+class Chatbot(private val prefix: String, credential:AuthToken) {
     private val twitchClient: TwitchClient = TwitchClientBuilder.builder()
         .withDefaultEventHandler(ReactorEventHandler::class.java)
         .withEnableHelix(true)
@@ -38,6 +39,12 @@ class Chatbot(private val prefix: String, private val credential:AuthToken) {
         .withClientId(credential.clientID)
         .withChatAccount(OAuth2Credential(credential.clientID,credential.token))
         .build()
+    
+    init {
+        val me=twitchClient.helix.getUsers(null,null,null).execute().users[0]
+        auth.username=me.login
+        auth.userID=me.id
+    }
     
     private val commandsMap= mutableMapOf<String, Command>()
     fun attachPlugin(vararg indexes:List<Command>){
@@ -74,5 +81,7 @@ class Chatbot(private val prefix: String, private val credential:AuthToken) {
             if(response != null)
                 twitchClient.chat.sendMessage(event.channel.name,response)
         }
+        
+        
     }
 }
