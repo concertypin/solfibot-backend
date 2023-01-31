@@ -48,7 +48,9 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
             return null
     
         return try { cmdObj.function.invoke(twitchClient, event, command.subList(1, command.size)) }
-            catch (_:Exception) { null }
+            catch (e: Exception) {
+                e.printStackTrace();null
+            }
     }
     
     fun run(username:Set<String>)
