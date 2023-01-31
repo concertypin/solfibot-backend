@@ -24,6 +24,16 @@ class DAOFacadeImpl : DAOFacade {
             .singleOrNull()
     }
     
+    override suspend fun existUser(uid: Int): UserData {
+        val query=user(uid)
+        return if(query != null)
+            query.decode()
+        else {
+            addNewUser(uid,StreamerData(),ListenerData())
+            UserData(uid)
+        }
+    }
+    
     override suspend fun addNewUser(uid:Int, streamerData: StreamerData, listenerData: ListenerData): EncodedUserData? = dbQuery {
         val insertStatement = UserDataTable.insert {
             it[UserDataTable.uid] = uid
@@ -33,7 +43,7 @@ class DAOFacadeImpl : DAOFacade {
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToUserData)
     }
     
-    override suspend fun editUser(uid: Int, streamerData: StreamerData,listenerData: ListenerData): Boolean = dbQuery {
+    override suspend fun editUser(uid: Int, streamerData: StreamerData, listenerData: ListenerData): Boolean = dbQuery {
         UserDataTable.update ({UserDataTable.uid eq uid}) {
             it[UserDataTable.uid]=uid
             it[UserDataTable.streamerData]=Json.encodeToString(StreamerData.serializer(),streamerData)

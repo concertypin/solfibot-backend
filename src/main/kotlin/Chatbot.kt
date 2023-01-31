@@ -6,6 +6,7 @@ import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import models.AuthToken
 import models.Command
 import models.Plugins
+import settings.auth
 
 class Chatbot(private val prefix: String, credential: AuthToken) {
     private val twitchClient: TwitchClient = TwitchClientBuilder.builder()
