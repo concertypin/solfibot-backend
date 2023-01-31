@@ -1,3 +1,5 @@
+package models
+
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import kotlin.reflect.KFunction2
@@ -9,6 +11,6 @@ data class Command(
     val requiredParams: Int
 )
 
-data class Processor(val function: KFunction2<TwitchClient, ChannelMessageEvent, Boolean>)
+data class Plugins(val function: KFunction2<TwitchClient, ChannelMessageEvent, Boolean>)
 data class AuthToken(val clientID: String, val token: String, var username: String, var userID: String)
 

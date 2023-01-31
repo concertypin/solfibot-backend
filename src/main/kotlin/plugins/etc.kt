@@ -1,6 +1,6 @@
 package plugins
 
-import Command
+import models.Command
 import auth
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent

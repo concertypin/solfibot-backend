@@ -10,5 +10,6 @@ FROM openjdk:17
 RUN mkdir /app
 ENV DOCKER=1
 COPY --from=build /home/gradle/src/build/libs/ /app/
+WORKDIR /app/
 
 ENTRYPOINT ["java","-jar","/app/MainKt-all.jar"]
