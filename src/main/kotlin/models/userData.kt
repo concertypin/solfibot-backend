@@ -6,12 +6,14 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.*
 import settings.maxChance
+import java.sql.Time
+import java.time.LocalDateTime
 
 @Serializable
 data class StreamerData(val command: MutableMap<String, String> = mutableMapOf(), val isSafeBrowsingEnabled:Boolean = false)
 
 @Serializable
-data class Roulette(var chances:Int = maxChance, var combo:Int = 0)
+data class Roulette(var chances:Int = maxChance, var combo:Int = 0, var lastEditedTime:Long=0)
 
 @Serializable
 data class ListenerData(val score:MutableMap<Int,Int> = mutableMapOf(),val roulette:MutableMap<Int,Roulette> = mutableMapOf())

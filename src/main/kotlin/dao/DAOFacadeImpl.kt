@@ -24,6 +24,8 @@ class DAOFacadeImpl : DAOFacade {
             .singleOrNull()
     }
     
+    override suspend fun user(uid:String) = user(uid.toInt())
+    
     override suspend fun existUser(uid: Int): UserData {
         val query=user(uid)
         return if(query != null)
@@ -34,6 +36,8 @@ class DAOFacadeImpl : DAOFacade {
         }
     }
     
+    override suspend fun existUser(uid:String)=existUser(uid.toInt())
+    
     override suspend fun addNewUser(uid:Int, streamerData: StreamerData, listenerData: ListenerData): EncodedUserData? = dbQuery {
         val insertStatement = UserDataTable.insert {
             it[UserDataTable.uid] = uid
@@ -43,6 +47,8 @@ class DAOFacadeImpl : DAOFacade {
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToUserData)
     }
     
+    override suspend fun addNewUser(uid: String, streamerData: StreamerData, listenerData: ListenerData)=addNewUser(uid.toInt(),streamerData,listenerData)
+    
     override suspend fun editUser(uid: Int, streamerData: StreamerData, listenerData: ListenerData): Boolean = dbQuery {
         UserDataTable.update ({UserDataTable.uid eq uid}) {
             it[UserDataTable.uid]=uid
@@ -51,9 +57,13 @@ class DAOFacadeImpl : DAOFacade {
         } > 0
     }
     
+    override suspend fun editUser(uid: String, streamerData: StreamerData, listenerData: ListenerData)=editUser(uid.toInt(),streamerData,listenerData)
+    
     override suspend fun deleteUser(uid: Int): Boolean = dbQuery {
         UserDataTable.deleteWhere { UserDataTable.uid eq uid } > 0
     }
+    
+    override suspend fun deleteUser(uid: String)=deleteUser(uid.toInt())
 }
 
 val dao: DAOFacade = DAOFacadeImpl().apply {
@@ -61,7 +71,7 @@ val dao: DAOFacade = DAOFacadeImpl().apply {
         if(allUsers().isEmpty())
             addNewUser(1024,
                 StreamerData(mutableMapOf("테스트" to "안농!"), false),
-                ListenerData(mutableMapOf(1024 to 0), mutableMapOf(0 to Roulette(0, 0)))
+                ListenerData(mutableMapOf(1024 to 0), mutableMapOf(0 to Roulette(0, 0,0)))
                 )
     }
 }

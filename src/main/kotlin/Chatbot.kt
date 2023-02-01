@@ -63,7 +63,7 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
             for (i in pluginsMap)
                 try {
                     if (!i.function.invoke(twitchClient, event))
-                        return@onEvent
+                            return@onEvent
                 } finally { }
             
             val response = parseCommand(event)
