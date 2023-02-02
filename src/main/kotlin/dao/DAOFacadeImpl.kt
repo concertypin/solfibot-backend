@@ -59,6 +59,12 @@ class DAOFacadeImpl : DAOFacade {
     
     override suspend fun editUser(uid: String, streamerData: StreamerData, listenerData: ListenerData)=editUser(uid.toInt(),streamerData,listenerData)
     
+    override suspend fun selectUsersVia(query:SqlExpressionBuilder.()->Op<Boolean>): List<UserData> = dbQuery {
+        UserDataTable.select(query)
+            .map(::resultRowToUserData)
+            .map(EncodedUserData::decode)
+    }
+    
     override suspend fun deleteUser(uid: Int): Boolean = dbQuery {
         UserDataTable.deleteWhere { UserDataTable.uid eq uid } > 0
     }

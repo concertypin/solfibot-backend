@@ -8,7 +8,10 @@ import models.Command
 import models.Plugins
 import settings.auth
 
+const val COMMAND_INDICATOR='`'
+
 class Chatbot(private val prefix: String, credential: AuthToken) {
+    
     private val twitchClient: TwitchClient = TwitchClientBuilder.builder()
         .withDefaultEventHandler(ReactorEventHandler::class.java)
         .withEnableHelix(true)
@@ -41,7 +44,32 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
         val rawCommand = event.message
         if (!rawCommand.startsWith(prefix))
             return null
-        val command = rawCommand.slice(prefix.length until rawCommand.length).split(" ")
+        
+        fun String.parseViaIndicator():List<String>
+        {
+            val result = mutableListOf<String>()
+            var temp = ""
+            var isIndicator = false
+            for (i in this)
+            {
+                if (i == COMMAND_INDICATOR)
+                {
+                    isIndicator = !isIndicator
+                    continue
+                }
+                if (i == ' ' && !isIndicator)
+                {
+                    result.add(temp)
+                    temp = ""
+                    continue
+                }
+                temp += i
+            }
+            result.add(temp)
+            return result
+        }
+        
+        val command = rawCommand.slice(prefix.length until rawCommand.length).parseViaIndicator()
         
         val cmdObj = commandsMap[command[0]] ?: return null
         

@@ -11,8 +11,7 @@ import settings.*
 import kotlin.math.max
 
 val etcIndex=listOf(
-    Command("룰렛", ::roulette,0),
-    Command("리더보드",::leaderboard, 0)
+    Command("룰렛", ::roulette,0)
 )
 
 fun ban(client: TwitchClient, event: ChannelMessageEvent,userID:String,duration:Int,reason:String="") {
@@ -65,9 +64,4 @@ fun roulette(client: TwitchClient, event:ChannelMessageEvent, args:List<String>)
         }
         "${event.user.name} -> 찰랔! ${score}번 살아남으셨습니다!"
     }
-}
-
-fun leaderboard(client: TwitchClient,event: ChannelMessageEvent,dummy:List<String>):String
-{
-    return "asdf" //todo
 }
