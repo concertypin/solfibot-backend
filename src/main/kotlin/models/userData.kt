@@ -7,7 +7,10 @@ import org.jetbrains.exposed.sql.Table
 import settings.maxChance
 
 @Serializable
-data class StreamerData(val command: MutableMap<String, String> = mutableMapOf(), val isSafeBrowsingEnabled:Boolean = false)
+data class StreamerData(
+    val command: MutableMap<String, String> = mutableMapOf(),
+    var isSafeBrowsingEnabled: Boolean = false
+)
 
 @Serializable
 data class Roulette(var chances:Int = maxChance, var combo:Int = 0, var lastEditedTime:Long=0)

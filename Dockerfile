@@ -1,15 +1,17 @@
-FROM gradle:7.6-jdk17 AS build
+FROM gradle:jdk15 AS build
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle shadowJar --no-daemon
 
 
 
-FROM openjdk:17
+FROM openjdk:15
 
 RUN mkdir /app
-ENV DOCKER=1
 COPY --from=build /home/gradle/src/build/libs/ /app/
 WORKDIR /app/
 
-ENTRYPOINT ["java","-jar","/app/MainKt-all.jar"]
+ENV DOCKER=1
+ENV SAFE_BROWSING=""
+
+ENTRYPOINT java -Dapi.key=${SAFE_BROWSING} -jar /app/MainKt-all.jar

@@ -3,9 +3,10 @@
 
 요구사항
 ---
+Docker
 
-- Java 17 이상(이하 버전에서의 작동은 보증되지 않습니다)
-- 환경 변수 또는 Docker Secret
+- Docker
+- 컨테이너에 전달되는 환경 변수 또는 Docker Secret
     - `TWITCH_ACCESS_TOKEN` : [트위치 토큰](https://twitchtokengenerator.com/quick/qONuuotkyB) (필수
       스코프:`user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
     - `TWITCH_CLIENT_ID` : Twitch 토큰의 Client ID. 생략할 수 있습니다. 기본값은 `gp762nuuoqcoxypju8c569th9wz7q5`
@@ -13,9 +14,9 @@
     - `PREFIX` : 기본 명령어 호출 접두사.
     - `TRUSTABLE_USER` : 콤마(`,`)로 구분된 Twitch 유저 ID. 이곳에 쓰인 유저는 봇의 완전한 권한을 얻습니다. 생략할 수 있습니다. 주어지지 않았다면, 채널의 관리자만 관리 명령어를
       사용할 수 있습니다.
-    - `SAFETYBROWSING_KEY` : Google Safe Browsing API 키.
+    - `SAFE_BROWSING` : Google Safe Browsing API 키.
     - `MAX_CHANCE` : 러시안 룰렛의 제한을 설정합니다. 만약 존재하지 않을 경우, 9999로 설정됩니다. 만약 자연수일 경우, 한 유저가 MAX_CHANCE만큼 타임아웃 된 후에는 더 이상 `룰렛`
-      명령어를 이용할 수 없습니다.
+      명령어를 이용할 수 없습니다.`
 
 실행법
 ===
@@ -31,4 +32,4 @@
     - `학점 [user] [offset]`
         - user와 offset 인자 없이 실행하거나 관리자가 아닌 유저가 실행할 경우, 자신의 학점을 출력합니다.
         - 관리자인 유저가 user 인자와 함께 실행할 경우, user의 학점을 출력합니다.
-        - 관리자인 유저가 user와 offset 인자와 함께 실행할 경우, user의 학점에 offset을 더합니다. 
+        - 관리자인 유저가 user와 offset 인자와 함께 실행할 경우, user의 학점에 offset을 더합니다.

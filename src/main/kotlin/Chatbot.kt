@@ -86,8 +86,10 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
     {
         for(i in username)
             twitchClient.chat.joinChannel(i)
-        
         twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
+            if (event.user.id == auth.userID)
+                return@onEvent
+    
             for (i in pluginMap)
                 try {
                     if (!i.function.invoke(twitchClient, event)) // if return value is false, stop running.
