@@ -1,17 +1,16 @@
 package commands
 
-import com.apollographql.apollo.api.toInput
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.helix.domain.BanUserInput
 import dao.dao
 import kotlinx.coroutines.runBlocking
 import models.*
-import settings.*
-import kotlin.math.max
+import settings.auth
+import settings.maxChance
 
 val etcIndex=listOf(
-    Command("룰렛", ::roulette,0)
+    Command("룰렛", ::roulette, 0, false)
 )
 
 fun ban(client: TwitchClient, event: ChannelMessageEvent,userID:String,duration:Int,reason:String="") {

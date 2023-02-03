@@ -8,7 +8,8 @@ import kotlin.reflect.KFunction3
 data class Command(
     val name: String,
     val function: KFunction3<TwitchClient, ChannelMessageEvent, List<String>, String?>,
-    val requiredParams: Int
+    val requiredParams: Int,
+    val isAdminCommand: Boolean
 )
 
 data class Plugin(val function: KFunction2<TwitchClient, ChannelMessageEvent, Boolean>)

@@ -7,6 +7,7 @@ import models.AuthToken
 import models.Command
 import models.Plugin
 import settings.auth
+import settings.trustableUser
 
 const val COMMAND_INDICATOR='`'
 
@@ -64,16 +65,21 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
             result.add(temp)
             return result
         }
-        
+    
         val command = rawCommand.slice(prefix.length until rawCommand.length).parseViaIndicator()
-        
         val cmdObj = commandsMap[command[0]] ?: return null
-        
+    
         if (cmdObj.requiredParams > command.size - 1)
             return null
+        if (cmdObj.isAdminCommand)
+            if (!isSudoers(twitchClient, event))
+                return null
     
-        return try { cmdObj.function.invoke(twitchClient, event, command.subList(1, command.size)) }
-            catch (e: Exception) { null }
+        return try {
+            cmdObj.function.invoke(twitchClient, event, command.subList(1, command.size))
+        } catch (e: Exception) {
+            null
+        }
     }
     
     fun run(username:Set<String>)
@@ -85,12 +91,22 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
             for (i in pluginMap)
                 try {
                     if (!i.function.invoke(twitchClient, event)) // if return value is false, stop running.
-                            return@onEvent
-                } finally { }
-            
+                        return@onEvent
+                } finally {
+                }
+    
             val response = parseCommand(event)
             if (response != null)
                 twitchClient.chat.sendMessage(event.channel.name, response)
         }
     }
+}
+
+fun isSudoers(client: TwitchClient, event: ChannelMessageEvent): Boolean {
+    if (event.channel.id == event.user.id)
+        return true
+    if (event.user.name in trustableUser)
+        return true
+    val response = client.helix.getModerators(auth.token, event.channel.id, listOf(event.user.id), null, 1).execute()
+    return response.moderators.isNotEmpty()
 }

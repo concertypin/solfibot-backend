@@ -3,25 +3,15 @@ package commands
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import dao.dao
+import isSudoers
 import kotlinx.coroutines.runBlocking
 import models.Command
 import models.decode
 import settings.auth
-import settings.trustableUser
 
 val scoreIndex= listOf(
-    Command("학점",::score,0)
+    Command("학점", ::score, 0, false)
 )
-
-fun isSudoers(client:TwitchClient,event:ChannelMessageEvent):Boolean
-{
-    if(event.channel.id==event.user.id)
-        return true
-    if(event.user.name in trustableUser)
-        return true
-    val response=client.helix.getModerators(auth.token,event.channel.id, listOf(event.user.id), null,1).execute()
-    return response.moderators.isNotEmpty()
-}
 
 fun String.usernameToUid(client: TwitchClient):String?
 {
