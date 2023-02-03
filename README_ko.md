@@ -6,8 +6,8 @@
 
 - Java 17 이상(이하 버전에서의 작동은 보증되지 않습니다)
 - 환경 변수 또는 Docker Secret
-    - `TWITCH_ACCESS_TOKEN` : [트위치 토큰](https://twitchtokengenerator.com/quick/pKhk2koNES) (필수
-      스코프:`user:read:email+chat:read+chat:edit+moderator:manage:banned_users`)
+    - `TWITCH_ACCESS_TOKEN` : [트위치 토큰](https://twitchtokengenerator.com/quick/qONuuotkyB) (필수
+      스코프:`user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
     - `TWITCH_CLIENT_ID` : Twitch 토큰의 Client ID. 생략할 수 있습니다. 기본값은 `gp762nuuoqcoxypju8c569th9wz7q5`
       입니다. ([twitchtokengenerator.com]()의 기본 토큰)
     - `PREFIX` : 기본 명령어 호출 접두사.

@@ -14,6 +14,6 @@ fun secret(name: String): String =
 val auth = AuthToken(secret("TWITCH_CLIENT_ID"), secret("TWITCH_TOKEN"), "", "")
 val joinUsername = System.getenv("TARGET").split(",").toSet()
 val maxChance = System.getenv("MAX_CHANCE")?.toInt() ?: 9999
-
+val prefix = System.getenv("PREFIX")
 val trustableUser = System.getenv("TRUSTABLE_USER")?.split(",")?.toSet() ?: setOf()
 
