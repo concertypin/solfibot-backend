@@ -5,7 +5,7 @@ import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import models.AuthToken
 import models.Command
-import models.Plugins
+import models.Plugin
 import settings.auth
 
 const val COMMAND_INDICATOR='`'
@@ -28,16 +28,16 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
     }
     
     private val commandsMap = mutableMapOf<String, Command>()
-    private val pluginsMap = mutableListOf<Plugins>()
+    private val pluginMap = mutableListOf<Plugin>()
     
     fun attachCommands(vararg indexes: List<Command>) {
         for (i in indexes)
             i.forEach { commandsMap[it.name] = it }
     }
     
-    fun attachPlugins(vararg indexes: List<Plugins>) {
+    fun attachPlugins(vararg indexes: List<Plugin>) {
         for (i in indexes)
-            i.forEach { pluginsMap.add(it) }
+            i.forEach { pluginMap.add(it) }
     }
     
     private fun parseCommand(event: ChannelMessageEvent): String? {
@@ -45,20 +45,16 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
         if (!rawCommand.startsWith(prefix))
             return null
         
-        fun String.parseViaIndicator():List<String>
-        {
+        fun String.parseViaIndicator():List<String> {
             val result = mutableListOf<String>()
             var temp = ""
             var isIndicator = false
-            for (i in this)
-            {
-                if (i == COMMAND_INDICATOR)
-                {
+            for (i in this) {
+                if (i == COMMAND_INDICATOR) {
                     isIndicator = !isIndicator
                     continue
                 }
-                if (i == ' ' && !isIndicator)
-                {
+                if (i == ' ' && !isIndicator) {
                     result.add(temp)
                     temp = ""
                     continue
@@ -77,9 +73,7 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
             return null
     
         return try { cmdObj.function.invoke(twitchClient, event, command.subList(1, command.size)) }
-            catch (e: Exception) {
-                e.printStackTrace();null
-            }
+            catch (e: Exception) { null }
     }
     
     fun run(username:Set<String>)
@@ -88,9 +82,9 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
             twitchClient.chat.joinChannel(i)
         
         twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
-            for (i in pluginsMap)
+            for (i in pluginMap)
                 try {
-                    if (!i.function.invoke(twitchClient, event))
+                    if (!i.function.invoke(twitchClient, event)) // if return value is false, stop running.
                             return@onEvent
                 } finally { }
             

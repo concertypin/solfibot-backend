@@ -11,6 +11,6 @@ data class Command(
     val requiredParams: Int
 )
 
-data class Plugins(val function: KFunction2<TwitchClient, ChannelMessageEvent, Boolean>)
+data class Plugin(val function: KFunction2<TwitchClient, ChannelMessageEvent, Boolean>)
 data class AuthToken(val clientID: String, val token: String, var username: String, var userID: String)
 
