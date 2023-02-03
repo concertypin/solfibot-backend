@@ -15,3 +15,5 @@ val auth= AuthToken(secret("TWITCH_CLIENT_ID"), secret("TWITCH_TOKEN"), "", "")
 val joinUsername=System.getenv("TARGET").split(",").toSet()
 val maxChance=System.getenv("MAX_CHANCE")?.toInt() ?: 3
 
+val trustableUser=System.getenv("TRUSTABLE_USER")?.split(",")?.toSet() ?: setOf()
+
