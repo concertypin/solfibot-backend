@@ -9,10 +9,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
     fun init() {
-        val driverClassName = "org.sqlite.JDBC"
-        val jdbcURL = "jdbc:sqlite:./db"
-        val database = Database.connect(jdbcURL, driverClassName)
-        
+        val driverClassName = "org.postgresql.Driver"
+        val database =
+            Database.connect(settings.jdbcURL, driverClassName, user = settings.username, password = settings.password)
+    
         transaction(database) {
             SchemaUtils.create(UserDataTable)
         }

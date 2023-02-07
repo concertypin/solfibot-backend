@@ -17,6 +17,9 @@ Docker
     - `SAFE_BROWSING` : Google Safe Browsing API 키.
     - `MAX_CHANCE` : 러시안 룰렛의 제한을 설정합니다. 만약 존재하지 않을 경우, 9999로 설정됩니다. 만약 자연수일 경우, 한 유저가 MAX_CHANCE만큼 타임아웃 된 후에는 더 이상 `룰렛`
       명령어를 이용할 수 없습니다.`
+    - `JDBC_URL` : PostgreSQL DB의 JDBC URL.
+    - `DB_USERNAME` : DB의 ID.
+    - `DB_PASSWORD` : DB의 비밀번호.
 
 실행법
 ===
