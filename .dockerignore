@@ -1,0 +1,7 @@
+.gradle
+.idea
+db
+.git
+gradlew.bat
+gradlew
+*.md

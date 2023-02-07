@@ -1,17 +1,27 @@
-FROM gradle:jdk15 AS build
-COPY . /home/gradle/src
-WORKDIR /home/gradle/src
-RUN gradle shadowJar --no-daemon
+# Use the official gradle image to create a build artifact.
+# https://hub.docker.com/_/gradle
+FROM gradle as builder
+
+# just download dependencies
+COPY build.gradle.kts .
+COPY settings.gradle.kts .
+COPY gradle.properties .
+# RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 
 
+# Copy local code to the container image.
+COPY . .
+# Build a release artifact.
+RUN gradle shadowjar -x test --parallel
 
-FROM openjdk:15
+# Use the Official OpenJDK image for a lean production stage of our multi-stage build.
+# https://hub.docker.com/_/openjdk
+# https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
+FROM openjdk:8-jre-alpine
 
-RUN mkdir /app
-COPY --from=build /home/gradle/src/build/libs/ /app/
-WORKDIR /app/
+# Copy the jar to the production image from the builder stage.
+COPY --from=builder /home/gradle/build/libs/MainKt-all.jar /main.jar
 
-ENV DOCKER=1
+# Run the web service on container startup.
 ENV SAFE_BROWSING=""
-
-ENTRYPOINT java -Dapi.key=${SAFE_BROWSING} -jar /app/MainKt-all.jar
+CMD java -Dapi.key=${SAFE_BROWSING} -jar /main.jar

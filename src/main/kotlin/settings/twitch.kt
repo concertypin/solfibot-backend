@@ -8,7 +8,7 @@ fun secret(name: String): String =
     if (System.getenv("DOCKER") != "1")
         System.getenv(name)
     else
-        Files.readString(Paths.get("/run/secrets/$name"))
+        Files.readAllLines(Paths.get("/run/secrets/$name"))[0]
 
 
 val auth = AuthToken(secret("TWITCH_CLIENT_ID"), secret("TWITCH_TOKEN"), "", "")

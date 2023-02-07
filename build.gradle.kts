@@ -32,8 +32,9 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
     implementation("org.xerial:sqlite-jdbc:3.30.1")
     
+    implementation("io.kubernetes:client-java:15.0.1")
+    
 }
-
 application {
     mainClass.set("MainKt")
 }
@@ -45,12 +46,12 @@ tasks.named<Test>("test") {
 tasks.jar {
     manifest.attributes["Main-Class"] = "MainKt"
 }
-tasks.jar {
-    manifest.attributes["Main-Class"] = "com.example.MyMainClass"
+/*tasks.jar {
+    manifest.attributes["Main-Class"] = "Mainkt"
     manifest.attributes["Class-Path"] = configurations
         .runtimeClasspath
         .get()
         .joinToString(separator = " ") { file ->
             "libs/${file.name}"
         }
-}
+}*/
