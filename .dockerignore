@@ -1,6 +1,7 @@
-.devcontainer/*
-.github/*
+.gradle
+.idea
+db
+.git
+gradlew.bat
+gradlew
 *.md
-*.yml
-.gitignore
-.pylintrc
