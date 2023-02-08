@@ -1,6 +1,6 @@
 # Use the official gradle image to create a build artifact.
 # https://hub.docker.com/_/gradle
-FROM gradle as builder
+FROM gradle:jdk8 as builder
 
 # just download dependencies
 COPY build.gradle.kts .
@@ -18,10 +18,11 @@ RUN gradle shadowjar -x test --parallel
 # https://hub.docker.com/_/openjdk
 # https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
 FROM openjdk:8-jre-alpine
-
+WORKDIR src
 # Copy the jar to the production image from the builder stage.
-COPY --from=builder /home/gradle/build/libs/MainKt-all.jar /main.jar
+COPY --from=builder /home/gradle/build/libs/MainKt-all.jar ./main.jar
 
 # Run the web service on container startup.
+RUN mkdir db
 ENV SAFE_BROWSING=""
-CMD java -Dapi.key=${SAFE_BROWSING} -jar /main.jar
+CMD java -Dapi.key=${SAFE_BROWSING} -jar main.jar

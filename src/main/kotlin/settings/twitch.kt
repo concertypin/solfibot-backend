@@ -5,10 +5,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 fun secret(name: String): String =
-    if (System.getenv("DOCKER") != "1")
-        System.getenv(name)
-    else
-        Files.readAllLines(Paths.get("/run/secrets/$name"))[0]
+        System.getenv(name) ?: Files.readAllLines(Paths.get("/run/secrets/$name"))[0]
 
 
 val auth = AuthToken(secret("TWITCH_CLIENT_ID"), secret("TWITCH_TOKEN"), "", "")
