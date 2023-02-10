@@ -6,20 +6,22 @@ import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import models.AuthToken
 import models.Command
 import models.Plugin
+import org.slf4j.LoggerFactory
 import settings.auth
 import settings.trustableUser
 
 const val COMMAND_INDICATOR='`'
 
 class Chatbot(private val prefix: String, credential: AuthToken) {
-    
+    private val logger = LoggerFactory.getLogger(Chatbot::class.java)
     private val twitchClient: TwitchClient = TwitchClientBuilder.builder()
         .withDefaultEventHandler(ReactorEventHandler::class.java)
         .withEnableHelix(true)
         .withEnableChat(true)
-        .withDefaultAuthToken(OAuth2Credential(credential.clientID,credential.token))
+        .withDefaultAuthToken(OAuth2Credential(credential.clientID, credential.token))
         .withClientId(credential.clientID)
         .withChatAccount(OAuth2Credential(credential.clientID, credential.token))
+        .withFeignLogLevel(feign.Logger.Level.HEADERS)
         .build()
     
     init {
@@ -78,12 +80,14 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
         return try {
             cmdObj.function.invoke(twitchClient, event, command.subList(1, command.size))
         } catch (e: Exception) {
+            logger.error(e.stackTraceToString())
             null
         }
     }
     
     fun run(username:Set<String>)
     {
+    
         for(i in username)
             twitchClient.chat.joinChannel(i)
         twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
@@ -92,22 +96,27 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
     
             for (i in pluginMap)
                 try {
-                    if (!i.function.invoke(twitchClient, event)) // if return value is false, stop running.
+                    val response = i.function.invoke(twitchClient, event)
+                    if (!response) { // if return value is false, stop running.
+                        logger.warn("Chat ${event.message} process is blocked by ${i.function.name} in ${event.channel.name}")
                         return@onEvent
+                    }
                 } finally {
                 }
     
             val response = parseCommand(event)
-            if (response != null)
+            if (response != null) {
+                logger.info("${event.message} -> $response on ${event.channel.name}")
                 twitchClient.chat.sendMessage(event.channel.name, response)
+            }
         }
     }
 }
 
 fun isSudoers(client: TwitchClient, event: ChannelMessageEvent): Boolean {
-    if (event.channel.id == event.user.id)
+    if (event.channel.id == event.user.id) // is broadcaster
         return true
-    if (event.user.name in trustableUser)
+    if (event.user.name in trustableUser) // is trustable user
         return true
     val response = client.helix.getModerators(auth.token, event.channel.id, listOf(event.user.id), null, 1).execute()
     return response.moderators.isNotEmpty()
