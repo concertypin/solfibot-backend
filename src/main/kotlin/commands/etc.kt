@@ -63,7 +63,7 @@ fun roulette(client: TwitchClient, event:ChannelMessageEvent, args:List<String>)
                 user.listenerData.editRoulette(event.channel.id, 0.offset, 1.offset)
             ) // if record exist, combo++
         }
-        "${event.user.name} -> 찰랔! ${score}번 살아남으셨습니다!"
+        "${event.user.name} -> 찰캌! ${score}번 살아남으셨습니다!"
     }
 }
 
