@@ -9,7 +9,11 @@
 
 name: Create and publish a Docker image
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 env:
   REGISTRY: ghcr.io
@@ -25,7 +29,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
       - name: set time and necessary dependency
         run: |
           echo TODAY_DATE=$(date +%Y%m%d) >> $GITHUB_ENV
@@ -42,7 +46,16 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image with time
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ env.TODAY_DATE }}
+          labels: ${{ env.TODAY_DATE }}
+
+
+      - name: Build and override existing Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
