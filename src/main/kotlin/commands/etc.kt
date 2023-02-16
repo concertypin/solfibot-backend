@@ -49,7 +49,7 @@ fun roulette(client: TwitchClient, event:ChannelMessageEvent, args:List<String>)
                 user.listenerData.editRoulette(event.channel.id, (-1).offset, 0.data)
             )
         }
-            ban(client, event, event.user.id, 1, "러시안 룰렛당해버린") //timeout 10s
+            ban(client, event, event.user.id, 10, "러시안 룰렛당해버린") //timeout 10s
         "${event.user.name} -> 탕! ${score}번 살아남으셨습니다!"
     }
     else{
