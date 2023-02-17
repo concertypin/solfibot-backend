@@ -46,11 +46,11 @@ jobs:
     
       - name: Cache Gradle packages
         uses: actions/cache@v2
-  with:
-    path: "~/.gradle/caches\n~/.gradle/wrapper"
-    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-    restore-keys: |
-      ${{ runner.os }}-gradle-
+        with:
+          path: "~/.gradle/caches\n~/.gradle/wrapper"
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Build Docker image
         shell: bash
@@ -62,9 +62,9 @@ jobs:
           docker push ghcr.io/concertypin/solfibot-backend:$(git rev-parse --short "$GITHUB_SHA")
 
       - name: Cleanup Gradle Cache
-           # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+          # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
     # Restoring these files from a GitHub Actions cache might cause problems for future builds.
-    if: ${{ always() }}
-    run: |
-     rm -f ~/.gradle/caches/modules-2/modules-2.lock
-     rm -f ~/.gradle/caches/modules-2/gc.properties
+        if: ${{ always() }}
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
