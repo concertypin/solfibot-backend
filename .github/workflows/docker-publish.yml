@@ -26,7 +26,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -45,14 +45,14 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           
       - name: Cache Gradle packages
-	      uses: actions/cache@v2
-	      with:
-	        path: |
-	          ~/.gradle/caches
-	          ~/.gradle/wrapper
-	        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-	        restore-keys: |
-	          ${{ runner.os }}-gradle-
+	uses: actions/cache@v2
+	with:
+	  path: |
+	    ~/.gradle/caches
+	    ~/.gradle/wrapper
+	  key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+	  restore-keys: |
+	    ${{ runner.os }}-gradle-
 
       - name: Build Docker image
         shell: bash
@@ -64,9 +64,9 @@ jobs:
           docker push ghcr.io/concertypin/solfibot-backend:$(git rev-parse --short "$GITHUB_SHA")
 
       - name: Cleanup Gradle Cache
-	        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
-	        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
-	        if: ${{ always() }}
-	        run: |
-	          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-	          rm -f ~/.gradle/caches/modules-2/gc.properties
+           # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+	  # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+	  if: ${{ always() }}
+	  run: |
+	   rm -f ~/.gradle/caches/modules-2/modules-2.lock
+	   rm -f ~/.gradle/caches/modules-2/gc.properties
