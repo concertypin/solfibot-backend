@@ -14,7 +14,6 @@ on:
   push:
     branches:
       - master
-      - dev-ci
 
 env:
   REGISTRY: ghcr.io
