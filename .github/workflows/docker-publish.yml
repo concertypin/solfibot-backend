@@ -43,14 +43,14 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          
+    
       - name: Cache Gradle packages
-	uses: actions/cache@v2
-	with:
-	  path: "~/.gradle/caches\n~/.gradle/wrapper"
-	  key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-	  restore-keys: |
-	    ${{ runner.os }}-gradle-
+        uses: actions/cache@v2
+  with:
+    path: "~/.gradle/caches\n~/.gradle/wrapper"
+    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+    restore-keys: |
+      ${{ runner.os }}-gradle-
 
       - name: Build Docker image
         shell: bash
@@ -63,8 +63,8 @@ jobs:
 
       - name: Cleanup Gradle Cache
            # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
-	  # Restoring these files from a GitHub Actions cache might cause problems for future builds.
-	  if: ${{ always() }}
-	  run: |
-	   rm -f ~/.gradle/caches/modules-2/modules-2.lock
-	   rm -f ~/.gradle/caches/modules-2/gc.properties
+    # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+    if: ${{ always() }}
+    run: |
+     rm -f ~/.gradle/caches/modules-2/modules-2.lock
+     rm -f ~/.gradle/caches/modules-2/gc.properties
