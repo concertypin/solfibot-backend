@@ -47,9 +47,7 @@ jobs:
       - name: Cache Gradle packages
 	uses: actions/cache@v2
 	with:
-	  path: |
-	    ~/.gradle/caches
-	    ~/.gradle/wrapper
+	  path: "~/.gradle/caches\n~/.gradle/wrapper"
 	  key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 	  restore-keys: |
 	    ${{ runner.os }}-gradle-
