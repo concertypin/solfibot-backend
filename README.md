@@ -3,7 +3,7 @@ How to run?
 
 Reqiurements
 ---
-- Docker
+- Docker Compose
 - Environment variables(via -e options or Docker Compose) or Docker Secret
     - `TWITCH_ACCESS_TOKEN` : [Twitch token](https://twitchtokengenerator.com/quick/qONuuotkyB) (required scope: `user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
     - `TWITCH_CLIENT_ID` : Client ID of Twitch token. Default value is `gp762nuuoqcoxypju8c569th9wz7q5`
@@ -16,6 +16,8 @@ Reqiurements
 
 실행법
 ---
+- Fill `<>` in `docker-compose.example.yml`, and rename it to `docker-compose.yml`.
+- run with `docker compose up`.
 
 - Basic command
     - Every basic command should be started with `PREFIX`.

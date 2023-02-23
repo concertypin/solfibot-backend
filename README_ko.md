@@ -3,9 +3,7 @@
 
 요구사항
 ---
-Docker
-
-- Docker
+- Docker Compose
 - 컨테이너에 전달되는 환경 변수 또는 Docker Secret
     - `TWITCH_ACCESS_TOKEN` : [트위치 토큰](https://twitchtokengenerator.com/quick/qONuuotkyB) (필수
       스코프:`user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
@@ -20,7 +18,10 @@ Docker
     - `DB_PATH` : DB가 저장될 경로. 빈 폴더를 권장합니다.
 
 실행법
-===
+---
+
+- `docker-compose.example.yml` 파일의 `<>`를 채우고, 파일명을 `docker-compose.yml`으로 변경하세요.
+- `docker compose up`으로 시작하세요.
 
 - 기본 명령어
     - 모든 기본 명령어는 `PREFIX` 환경 변수로 지정된 접두사와 같이 입력되어야 합니다.
