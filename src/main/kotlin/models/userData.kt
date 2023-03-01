@@ -6,9 +6,10 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Table
 import settings.maxChance
 
+
 @Serializable
 data class StreamerData(
-    val command: MutableMap<String, String> = mutableMapOf(),
+    val command: MutableMap<String, List<String>> = mutableMapOf(),
     var isSafeBrowsingEnabled: Boolean = false
 )
 

@@ -19,15 +19,14 @@ fun ban(client: TwitchClient, event: ChannelMessageEvent,userID:String,duration:
     client.helix.banUser(auth.token, event.channel.id, auth.userID, BanUserInput(userID, reason, duration)).execute()
 }
 
-fun roulette(client: TwitchClient, event:ChannelMessageEvent, args:List<String>):String
-{
-    if(
+fun roulette(client: TwitchClient, event: ChannelMessageEvent, ignoredArgs: List<String>): String {
+    if (
         runBlocking {
-            val user=dao.existUser(event.user.id)
-            val roulette=user.let { it.listenerData.roulette[event.channel.id.toInt()] ?: Roulette() }
-            if(roulette.lastEditedTime<System.currentTimeMillis()-(86_400_000L)) /*lastEditedTime < now -1day*/
-            {
-                dao.editUser(event.user.id,
+            val user = dao.existUser(event.user.id)
+            val roulette = user.let { it.listenerData.roulette[event.channel.id.toInt()] ?: Roulette() }
+            if (roulette.lastEditedTime < System.currentTimeMillis() - (86_400_000L)) /*lastEditedTime < now -1day*/ {
+                dao.editUser(
+                    event.user.id,
                     user.streamerData,
                     user.listenerData.editRoulette(event.channel.id, chances = maxChance.data) //recover day by day
                 )

@@ -1,7 +1,6 @@
 package dao
 
 import dao.DatabaseFactory.dbQuery
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import models.*
 import org.jetbrains.exposed.sql.*
@@ -72,12 +71,4 @@ class DAOFacadeImpl : DAOFacade {
     override suspend fun deleteUser(uid: String)=deleteUser(uid.toInt())
 }
 
-val dao: DAOFacade = DAOFacadeImpl().apply {
-    runBlocking {
-        if(allUsers().isEmpty())
-            addNewUser(1024,
-                StreamerData(mutableMapOf("테스트" to "안농!"), false),
-                ListenerData(mutableMapOf(1024 to 0), mutableMapOf(0 to Roulette(0, 0,0)))
-                )
-    }
-}
+val dao: DAOFacade = DAOFacadeImpl()

@@ -65,10 +65,17 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
                 temp += i
             }
             result.add(temp)
+            result.forEach { it.trim() }
             return result
         }
     
         val command = rawCommand.slice(prefix.length until rawCommand.length).parseViaIndicator()
+    
+        command.forEach {
+            if (it.startsWith("/"))
+                return "슬래시(/)로 시작하는 명령어는 입력할 수 없습니다."
+        }
+    
         val cmdObj = commandsMap[command[0]] ?: return null
     
         if (cmdObj.requiredParams > command.size - 1)

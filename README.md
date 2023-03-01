@@ -11,8 +11,9 @@ Reqiurements
     - `PREFIX` : Basic command calling prefix.
     - `TRUSTABLE_USER` : comma-seperated Twitch user login ID. These users get every permission of the bot. Optional.
     - `SAFE_BROWSING` : Google Safe Browsing API key.
-    - `MAX_CHANCE` : Limit of roulette chance. Default value is 9999. If a user was timeouted MAX_CHANCE times, can't call `룰렛` anymore.
-    - `DB_PATH` : Path of DB. Empty directory is recommend.
+    - `MAX_CHANCE` : Limit of roulette chance. Default value is 9999. If a user was timeouted MAX_CHANCE times, can't
+      call `룰렛` anymore.
+    - `DB_PATH` : Path of DB. Empty directory is recommended.
 
 실행법
 ---

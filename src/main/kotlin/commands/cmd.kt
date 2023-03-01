@@ -13,9 +13,9 @@ val cmdIndex= listOf(
     Command("목록", ::listCommand, 0, false)
 )
 
-fun registerCommand(client: TwitchClient, event: ChannelMessageEvent, args: List<String>): String {
+fun registerCommand(ignoredClient: TwitchClient, event: ChannelMessageEvent, args: List<String>): String {
     val commandName = args[0]
-    val commandText = args[1]
+    val commandText = args.slice(1 until args.size)
     runBlocking {
         val user = dao.existUser(event.channel.id)
         user.streamerData.command[commandName] = commandText
@@ -24,7 +24,7 @@ fun registerCommand(client: TwitchClient, event: ChannelMessageEvent, args: List
     return "명령어가 등록되었습니다."
 }
 
-fun removeCommand(client: TwitchClient, event: ChannelMessageEvent, args: List<String>): String {
+fun removeCommand(ignoredClient: TwitchClient, event: ChannelMessageEvent, args: List<String>): String {
     val commandName = args[0]
     return runBlocking {
         val user = dao.user(event.channel.id)?.decode() ?: return@runBlocking "존재하지 않는 명령어입니다."
@@ -41,13 +41,12 @@ fun removeCommand(client: TwitchClient, event: ChannelMessageEvent, args: List<S
     }
 }
 
-fun listCommand(client: TwitchClient,event: ChannelMessageEvent,args: List<String>):String
-{
-    val queryName=args.firstOrNull()
+fun listCommand(ignoredClient: TwitchClient, event: ChannelMessageEvent, args: List<String>): String {
+    val queryName = args.firstOrNull()
     
     return runBlocking {
         val user = dao.user(event.channel.id)?.decode() ?: return@runBlocking ""
-    
+        
         if (queryName == null)
             return@runBlocking user.streamerData.command.keys.joinToString(" | ")
         else

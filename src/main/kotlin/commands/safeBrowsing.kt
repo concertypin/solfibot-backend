@@ -11,7 +11,7 @@ val safeBrowsingIndex = listOf(
     Command("링크검열", ::toggleSafeBrowsing, 0, true)
 )
 
-fun toggleSafeBrowsing(client: TwitchClient, event: ChannelMessageEvent, args: List<String>): String? {
+fun toggleSafeBrowsing(ignoredClient: TwitchClient, event: ChannelMessageEvent, ignoredArgs: List<String>): String? {
     if (!(event.channel.id == event.user.id || event.user.name in trustableUser))
         return null
     return runBlocking {

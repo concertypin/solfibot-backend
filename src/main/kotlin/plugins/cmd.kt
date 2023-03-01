@@ -14,8 +14,10 @@ fun pop(client: TwitchClient, event: ChannelMessageEvent):Boolean
         val user= dao.existUser(event.channel.id)
         val response=user.streamerData.command[event.message]
         if (response != null) {
-            client.chat.sendMessage(event.channel.name, response)
-            return@runBlocking false
+            if (response.isNotEmpty()) {
+                client.chat.sendMessage(event.channel.name, response.random())
+                return@runBlocking false
+            }
         }
         return@runBlocking true
     }
