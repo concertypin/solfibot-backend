@@ -7,17 +7,12 @@ import isSudoers
 import kotlinx.coroutines.runBlocking
 import models.Command
 import models.decode
-import settings.auth
+import utils.usernameToUID
 
 val scoreIndex= listOf(
     Command("학점", ::score, 0, false)
 )
 
-fun String.usernameToUid(client: TwitchClient):String?
-{
-    val response=client.helix.getUsers(auth.token,null, listOf(this)).execute()
-    return response.users.firstOrNull()?.id
-}
 
 fun score(client:TwitchClient,event:ChannelMessageEvent,args:List<String>):String
 {
@@ -32,7 +27,7 @@ fun score(client:TwitchClient,event:ChannelMessageEvent,args:List<String>):Strin
     if(!isSudoers(client,event) || args.isEmpty()) //self-listing by normal user or sudoers(no args)
         return "${event.user.name}님의 학점은 ${lookup(event.user.id)}이에요!"
     
-    val targetUid=args[0].usernameToUid(client) ?: return "사용자가 존재하지 않아요!"
+    val targetUid = args[0].usernameToUID(client) ?: return "사용자가 존재하지 않아요!"
     
     if(args.size==1)
         return "${args[0]}님의 학점은 ${lookup(targetUid)}이에요!"

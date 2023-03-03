@@ -25,6 +25,10 @@
         </triggeringPolicy>
     </appender>
 
+    <logger name="me.sickbbang.logging_test" level="WARN" additivity="false">
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
     <!-- Appender Output Configuration -->
     <root level="info">
         <appender-ref ref="CONSOLE"/>
