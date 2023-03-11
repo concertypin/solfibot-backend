@@ -11,8 +11,8 @@ import settings.maxChance
 import settings.trustableUser
 
 val etcIndex=listOf(
-    Command("룰렛", ::roulette, 0, false),
-    Command("rouletteMod", ::modifyAsSudoers, 2, true)
+    Command("룰렛", 0, false, ::roulette),
+    Command("rouletteMod", 2, true, ::modifyAsSudoers)
 )
 
 fun ban(client: TwitchClient, event: ChannelMessageEvent,userID:String,duration:Int,reason:String="") {

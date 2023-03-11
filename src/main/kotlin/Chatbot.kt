@@ -3,12 +3,14 @@ import com.github.philippheuer.events4j.reactor.ReactorEventHandler
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
+import kotlinx.coroutines.runBlocking
 import models.AuthToken
 import models.Command
 import models.Plugin
 import org.slf4j.LoggerFactory
 import settings.auth
 import settings.trustableUser
+import kotlin.system.exitProcess
 
 const val COMMAND_INDICATOR='`'
 
@@ -84,8 +86,30 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
             if (!isSudoers(twitchClient, event))
                 return null
     
+        if (cmdObj.suspendFunction != null && cmdObj.function != null) // only one func
+        {
+            logger.error("Command ${cmdObj.name} doesn't have function OR suspendFunction.")
+            exitProcess(1)
+        }
+        if (cmdObj.suspendFunction == null && cmdObj.function == null) {
+            logger.error("Command ${cmdObj.name} doesn't have any function.")
+        }
+    
         return try {
-            cmdObj.function.invoke(twitchClient, event, command.subList(1, command.size))
+        
+            if (cmdObj.function != null)
+                cmdObj.function.invoke(twitchClient, event, command.subList(1, command.size))
+            else if (cmdObj.suspendFunction != null)
+                runBlocking {
+                    return@runBlocking cmdObj.suspendFunction.invoke(
+                        twitchClient,
+                        event,
+                        command.subList(1, command.size)
+                    )
+                }
+            else
+                throw Exception("이거 왜 호출됨?")
+        
         } catch (e: Exception) {
             logger.error(e.stackTraceToString())
             null

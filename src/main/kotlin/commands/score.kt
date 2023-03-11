@@ -10,7 +10,7 @@ import models.decode
 import settings.auth
 
 val scoreIndex= listOf(
-    Command("학점", ::score, 0, false)
+    Command("학점", 0, false, ::score)
 )
 
 fun String.usernameToUid(client: TwitchClient):String?
