@@ -7,7 +7,7 @@ Reqiurements
 - Environment variables(via -e options or Docker Compose) or Docker Secret
     - `TWITCH_ACCESS_TOKEN` : [Twitch token](https://twitchtokengenerator.com/quick/qONuuotkyB) (required scope: `user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
     - `TWITCH_CLIENT_ID` : Client ID of Twitch token. Default value is `gp762nuuoqcoxypju8c569th9wz7q5`
-     (Client ID of [twitchtokengenerator.com]())
+     (Client ID of [twitchtokengenerator.com](twitchtokengenerator.com))
     - `PREFIX` : Basic command calling prefix.
     - `TRUSTABLE_USER` : comma-seperated Twitch user login ID. These users get every permission of the bot. Optional.
     - `SAFE_BROWSING` : Google Safe Browsing API key.
