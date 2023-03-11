@@ -8,11 +8,11 @@ import kotlinx.coroutines.runBlocking
 import models.*
 import settings.auth
 import settings.maxChance
-import settings.trustableUser
+import utils.usernameToUID
 
 val etcIndex=listOf(
     Command("룰렛", 0, false, ::roulette),
-    Command("rouletteMod", 2, true, ::modifyAsSudoers)
+    Command("머리수복", 2, true, ::modify)
 )
 
 fun ban(client: TwitchClient, event: ChannelMessageEvent,userID:String,duration:Int,reason:String="") {
@@ -35,10 +35,10 @@ fun roulette(client: TwitchClient, event: ChannelMessageEvent, ignoredArgs: List
         return@runBlocking roulette.chances<=0
     }) return "오늘 룰렛을 돌리기에는 머리가 너무 많이 깨졌습니다."
     
-    return if ((1..6).random() == 6) {
+    return if ((5..6).random() == 6) {
         val score: Int
         runBlocking {
-            val user= dao.existUser(event.user.id)
+            val user = dao.existUser(event.user.id)
             score = user.listenerData.roulette[event.channel.id.toInt()]?.combo ?: 0 // 0 if record not exist
             
             //writing db
@@ -66,24 +66,18 @@ fun roulette(client: TwitchClient, event: ChannelMessageEvent, ignoredArgs: List
     }
 }
 
-fun modifyAsSudoers(client: TwitchClient, event: ChannelMessageEvent, args: List<String>): String? {
-    if (event.user.name !in trustableUser)
-        return null
-    
+fun modify(client: TwitchClient, event: ChannelMessageEvent, args: List<String>): String {
     return runBlocking {
-        val uid =
-            args[0].toIntOrNull() ?: client.helix.getUsers(null, null, listOf(args[0])).execute().users[0].id.toInt()
-        
+        val uid = args[0].usernameToUID(client) ?: return@runBlocking "적절하지 않은 아이디에요!"
         val user = dao.existUser(uid)
         
-        val channelId = args.getOrNull(2)?.toInt() ?: event.channel.id.toInt()
-        
+        val listenerData = user.listenerData.editRoulette(event.channel.id, 1.offset)
         //writing db
         dao.editUser(
             uid,
             user.streamerData, //pass it without modifying
-            user.listenerData.editRoulette(channelId, 3.data, args[1].toInt().data)
+            listenerData
         )
-        return@runBlocking user.listenerData.roulette[channelId]?.combo?.toString() ?: "0"
+        return@runBlocking "${args[0]} 유저의 룰렛 기회는 이제 ${listenerData.roulette[event.channel.id.toInt()]?.chances}입니다!"
     }
 }
