@@ -8,7 +8,7 @@ import models.Command
 import settings.trustableUser
 
 val safeBrowsingIndex = listOf(
-    Command("링크검열", ::toggleSafeBrowsing, 0, true)
+    Command("링크검열", 0, true, ::toggleSafeBrowsing)
 )
 
 fun toggleSafeBrowsing(ignoredClient: TwitchClient, event: ChannelMessageEvent, ignoredArgs: List<String>): String? {

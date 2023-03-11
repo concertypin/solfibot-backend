@@ -8,9 +8,9 @@ import models.Command
 import models.decode
 
 val cmdIndex= listOf(
-    Command("등록", ::registerCommand, 2, true),
-    Command("삭제", ::removeCommand, 1, true),
-    Command("목록", ::listCommand, 0, false)
+    Command("등록", 2, true, ::registerCommand),
+    Command("삭제", 1, true, ::removeCommand),
+    Command("목록", 0, false, ::listCommand)
 )
 
 fun registerCommand(ignoredClient: TwitchClient, event: ChannelMessageEvent, args: List<String>): String {

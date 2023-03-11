@@ -14,12 +14,15 @@ repositories {
 dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4-native-mt")
     implementation("com.google.guava:guava:31.1-jre")
     
+    //twitch4j
     implementation("com.github.twitch4j:twitch4j:1.13.0")
     implementation("com.github.philippheuer.events4j:events4j-handler-reactor:0.11.0")
     implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.3.5")
     
+    //ktor client
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0-RC")
@@ -28,6 +31,7 @@ dependencies {
     
     implementation("kg.net.bazi.gsb4j:gsb4j-core:1.0.6")
     
+    //exposed with sqlite
     implementation("org.jetbrains.exposed:exposed-core:0.41.1")
     implementation("org.jetbrains.exposed:exposed-dao:0.41.1")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")

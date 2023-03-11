@@ -10,7 +10,7 @@ import models.decode
 import utils.usernameToUID
 
 val scoreIndex= listOf(
-    Command("학점", ::score, 0, false)
+    Command("학점", 0, false, ::score)
 )
 
 
