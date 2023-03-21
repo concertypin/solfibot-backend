@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   solfitest:
-    image: gcr.io/solfibot/github.com/konfani/solfibot-backend:<>
+    image: ghcr.io/concertypin/solfibot-backend:<>
     restart: always
     environment:
       MAX_CHANCE: 3
