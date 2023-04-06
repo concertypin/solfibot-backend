@@ -35,7 +35,7 @@ fun roulette(client: TwitchClient, event: ChannelMessageEvent, ignoredArgs: List
         return@runBlocking roulette.chances<=0
     }) return "오늘 룰렛을 돌리기에는 머리가 너무 많이 깨졌습니다."
     
-    return if ((1..6).random() == 6) {
+    return if ((5..6).random() == 6) {
         val score: Int
         runBlocking {
             val user = dao.existUser(event.user.id)
