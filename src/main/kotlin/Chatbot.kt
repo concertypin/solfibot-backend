@@ -3,6 +3,7 @@ import com.github.philippheuer.events4j.reactor.ReactorEventHandler
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
+import com.github.twitch4j.events.ChannelGoOfflineEvent
 import kotlinx.coroutines.runBlocking
 import models.AuthToken
 import models.Command
@@ -121,6 +122,11 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
     
         for(i in username)
             twitchClient.chat.joinChannel(i)
+        
+        twitchClient.eventManager.onEvent(ChannelGoOfflineEvent::class.java){
+            exitProcess(0)
+        }
+        
         twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
             if (event.user.id == auth.userID)
                 return@onEvent
