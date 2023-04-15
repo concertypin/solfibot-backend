@@ -6,8 +6,8 @@ import dao.dao
 import kg.net.bazi.gsb4j.Gsb4j
 import kg.net.bazi.gsb4j.api.SafeBrowsingApi
 import kotlinx.coroutines.runBlocking
-import models.Plugin
-import models.decode
+import models.twitch.Plugin
+import models.userData.decode
 
 val safeBrowsingPluginIndex = listOf(Plugin(SafeBrowsing::checkFromChat))
 val URLRegex = "([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?".toRegex()

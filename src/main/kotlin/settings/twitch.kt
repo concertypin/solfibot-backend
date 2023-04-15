@@ -1,6 +1,6 @@
 package settings
 
-import models.AuthToken
+import models.twitch.AuthToken
 import java.nio.file.Files
 import java.nio.file.Paths
 

@@ -1,4 +1,4 @@
-package models
+package models.twitch
 
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent

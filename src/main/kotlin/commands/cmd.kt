@@ -4,8 +4,8 @@ import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import dao.dao
 import kotlinx.coroutines.runBlocking
-import models.Command
-import models.decode
+import models.twitch.Command
+import models.userData.decode
 
 val cmdIndex= listOf(
     Command("등록", 2, true, ::registerCommand),

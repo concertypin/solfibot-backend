@@ -2,7 +2,7 @@ package dao
 
 import dao.DatabaseFactory.dbQuery
 import kotlinx.serialization.json.Json
-import models.*
+import models.userData.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
@@ -30,7 +30,7 @@ class DAOFacadeImpl : DAOFacade {
         return if(query != null)
             query.decode()
         else {
-            addNewUser(uid,StreamerData(),ListenerData())
+            addNewUser(uid, StreamerData(),ListenerData())
             UserData(uid)
         }
     }

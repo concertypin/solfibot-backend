@@ -5,9 +5,9 @@ import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.events.ChannelGoOfflineEvent
 import kotlinx.coroutines.runBlocking
-import models.AuthToken
-import models.Command
-import models.Plugin
+import models.twitch.AuthToken
+import models.twitch.Command
+import models.twitch.Plugin
 import org.slf4j.LoggerFactory
 import settings.auth
 import settings.trustableUser

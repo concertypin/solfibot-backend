@@ -5,7 +5,8 @@ import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.helix.domain.BanUserInput
 import dao.dao
 import kotlinx.coroutines.runBlocking
-import models.*
+import models.userData.*
+import models.twitch.Command
 import settings.auth
 import settings.maxChance
 import utils.usernameToUID
