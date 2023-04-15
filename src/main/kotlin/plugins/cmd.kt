@@ -5,7 +5,7 @@ import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import dao.dao
 import isSudoers
 import kotlinx.coroutines.runBlocking
-import models.Plugin
+import models.twitch.Plugin
 
 val cmdPluginIndex=listOf(Plugin(::pop))
 

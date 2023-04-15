@@ -4,7 +4,7 @@ import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import dao.dao
 import kotlinx.coroutines.runBlocking
-import models.Command
+import models.twitch.Command
 import settings.trustableUser
 
 val safeBrowsingIndex = listOf(

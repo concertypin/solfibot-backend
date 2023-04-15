@@ -1,9 +1,9 @@
 package dao
 
-import models.EncodedUserData
-import models.ListenerData
-import models.StreamerData
-import models.UserData
+import models.userData.EncodedUserData
+import models.userData.ListenerData
+import models.userData.StreamerData
+import models.userData.UserData
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder
 
@@ -16,7 +16,7 @@ interface DAOFacade {
     suspend fun existUser(uid:Int): UserData
     suspend fun existUser(uid:String): UserData
     
-    suspend fun addNewUser(uid:Int, streamerData:StreamerData,listenerData:ListenerData): EncodedUserData?
+    suspend fun addNewUser(uid:Int, streamerData: StreamerData, listenerData: ListenerData): EncodedUserData?
     suspend fun addNewUser(uid:String,streamerData: StreamerData,listenerData: ListenerData):EncodedUserData?
     
     suspend fun editUser(uid: Int, streamerData: StreamerData,listenerData: ListenerData): Boolean
