@@ -3,5 +3,6 @@
 db
 .git
 gradlew.bat
+gradle
 gradlew
 *.md
