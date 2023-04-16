@@ -4,7 +4,7 @@
 요구사항
 ---
 - Docker Compose
-- 컨테이너에 전달되는 환경 변수 또는 Docker Secret
+- .env 파일을 통한 환경 변수 
     - `TWITCH_ACCESS_TOKEN` : [트위치 토큰](https://twitchtokengenerator.com/quick/qONuuotkyB) (필수
       스코프:`user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
     - `TWITCH_CLIENT_ID` : Twitch 토큰의 Client ID. 생략할 수 있습니다. 기본값은 `gp762nuuoqcoxypju8c569th9wz7q5`
@@ -20,7 +20,7 @@
 실행법
 ---
 
-- `docker-compose.example.yml` 파일의 `<>`를 채우고, 파일명을 `docker-compose.yml`으로 변경하세요.
+- `example.env` 파일의 `<>`를 채우고, 파일명을 `.env`으로 변경하세요.
 - `docker compose up`으로 시작하세요.
 
 - 기본 명령어
