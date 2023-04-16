@@ -4,27 +4,53 @@ import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import dao.dao
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kg.net.bazi.gsb4j.Gsb4j
-import kg.net.bazi.gsb4j.api.SafeBrowsingApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
 import models.twitch.Plugin
 import models.userData.decode
+import models.safeBrowsing.*
 
 val safeBrowsingPluginIndex = listOf(Plugin(SafeBrowsing::checkFromChat))
 val URLRegex = "([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?".toRegex()
 
 object SafeBrowsing {
+    private val endpoint="https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${settings.safeBrowsingAPIkey}"
     private val client= HttpClient(CIO){
         install(ContentNegotiation){
             json()
         }
     }
-    private fun isURLSafe(url: String): String? {
-        return api.check(url)?.threatType?.name
+    private val isURLSafe=utils.Cache.cached {
+        runBlocking {
+            val rawResponse=client.post(endpoint){
+                contentType(ContentType.Application.Json)
+                setBody(
+                    SafeBrowsingLookupRequest(
+                        ClientInfo("solfibot","0.0.0.0"),
+                        ThreatInfo(
+                            listOf("MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE"),
+                            listOf("ANY_PLATFORM"),
+                            listOf("URL","EXECUTABLE"),
+                            listOf(
+                                ThreatEntry(
+                                it
+                            )
+                            )
+                        )
+                    )
+                )
+            }
+            val response:SafeBrowsingLookupResponse=rawResponse.body()
+            if(response.matches?.isEmpty() != false)
+                return@runBlocking null
+            
+            return@runBlocking response.matches.first().threatType
+        }
     }
     
     private fun isURL(message: String): Sequence<MatchResult> = URLRegex.findAll(message)

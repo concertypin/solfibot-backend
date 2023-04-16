@@ -24,4 +24,4 @@ COPY --from=builder /home/gradle/build/libs/MainKt-all.jar ./main.jar
 # Run the web service on container startup.
 RUN mkdir db
 ENV SAFE_BROWSING=""
-CMD java -Dapi.key=${SAFE_BROWSING} -Xms1024m -Xmx1536m -jar main.jar
+CMD java -Xms1024m -Xmx1536m -jar main.jar
