@@ -3,9 +3,14 @@ package plugins
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import dao.dao
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
 import kg.net.bazi.gsb4j.Gsb4j
 import kg.net.bazi.gsb4j.api.SafeBrowsingApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
 import models.twitch.Plugin
 import models.userData.decode
 
@@ -13,9 +18,11 @@ val safeBrowsingPluginIndex = listOf(Plugin(SafeBrowsing::checkFromChat))
 val URLRegex = "([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?".toRegex()
 
 object SafeBrowsing {
-    private val gsb4j: Gsb4j = Gsb4j.bootstrap()
-    private val api = gsb4j.getApiClient(SafeBrowsingApi.Type.UPDATE_API)
-    
+    private val client= HttpClient(CIO){
+        install(ContentNegotiation){
+            json()
+        }
+    }
     private fun isURLSafe(url: String): String? {
         return api.check(url)?.threatType?.name
     }
