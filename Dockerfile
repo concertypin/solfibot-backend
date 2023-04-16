@@ -6,12 +6,11 @@ FROM gradle:jdk8 as builder
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
 COPY gradle.properties .
-# RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
+RUN gradle clean build --no-daemon > /dev/null 2>&1 || true
 
 
 # Copy local code to the container image.
 COPY . .
-# Build a release artifact.
 RUN gradle shadowjar -x test --parallel
 
 # Use the Official OpenJDK image for a lean production stage of our multi-stage build.
