@@ -4,7 +4,7 @@ How to run?
 Reqiurements
 ---
 - Docker Compose
-- Environment variables(via -e options or Docker Compose) or Docker Secret
+- Environment variables via .env file
     - `TWITCH_ACCESS_TOKEN` : [Twitch token](https://twitchtokengenerator.com/quick/qONuuotkyB) (required scope: `user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
     - `TWITCH_CLIENT_ID` : Client ID of Twitch token. Default value is `gp762nuuoqcoxypju8c569th9wz7q5`
      (Client ID of [twitchtokengenerator.com](http://twitchtokengenerator.com))
@@ -15,9 +15,9 @@ Reqiurements
       call `룰렛` anymore.
     - `DB_PATH` : Path of DB. Empty directory is recommended.
 
-실행법
+Run
 ---
-- Fill `<>` in `docker-compose.example.yml`, and rename it to `docker-compose.yml`.
+- Fill `<>` in `example.env`, and rename it to `.env`.
 - run with `docker compose up`.
 
 - Basic command
