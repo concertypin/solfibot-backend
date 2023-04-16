@@ -1,15 +1,9 @@
 version: "3.7"
 services:
   solfitest:
-    image: ghcr.io/concertypin/solfibot-backend:<>
+    image: "ghcr.io/concertypin/solfibot-backend:${VERSION}"
     restart: always
-    environment:
-      MAX_CHANCE: 3
-      TARGET: <>
-      TRUSTABLE_USER: <>
-      TWITCH_CLIENT_ID: <>
-      PREFIX: '<>'
-      TWITCH_TOKEN: <>
-      SAFE_BROWSING: <>
+    env_file:
+      - .env
     volumes:
       - <>:/src/db
