@@ -11,9 +11,10 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+import models.safeBrowsing.*
 import models.twitch.Plugin
 import models.userData.decode
-import models.safeBrowsing.*
 
 val safeBrowsingPluginIndex = listOf(Plugin(SafeBrowsing::checkFromChat))
 val URLRegex = "([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?".toRegex()
@@ -21,8 +22,11 @@ val URLRegex = "([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+
 object SafeBrowsing {
     private val endpoint="https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${settings.safeBrowsingAPIkey}"
     private val client= HttpClient(CIO){
-        install(ContentNegotiation){
-            json()
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+            })
         }
     }
     private val isURLSafe=utils.Cache.cached {
@@ -37,15 +41,14 @@ object SafeBrowsing {
                             listOf("ANY_PLATFORM"),
                             listOf("URL","EXECUTABLE"),
                             listOf(
-                                ThreatEntry(
-                                it
-                            )
+                                ThreatEntry(it)
                             )
                         )
                     )
                 )
             }
             val response:SafeBrowsingLookupResponse=rawResponse.body()
+            println("lookup")
             if(response.matches?.isEmpty() != false)
                 return@runBlocking null
             

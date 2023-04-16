@@ -43,6 +43,6 @@ data class ThreatMatch(
 
 @Serializable
 data class Threat(
-    @SerialName("url") val url: String,
-    @SerialName("threatTypes") val threatTypes: List<String>
+    @SerialName("url") val url: String? = null,
+    @SerialName("threatTypes") val threatTypes: List<String>? = null
 )
