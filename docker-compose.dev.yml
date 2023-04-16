@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  solfitest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - "${DB_PATH}:/src/db"

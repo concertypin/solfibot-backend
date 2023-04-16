@@ -146,4 +146,3 @@ gradle-app.setting
 
 db
 .env
-docker-compose.yml
