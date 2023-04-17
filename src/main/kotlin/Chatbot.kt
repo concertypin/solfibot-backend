@@ -155,6 +155,8 @@ fun isSudoers(client: TwitchClient, event: ChannelMessageEvent): Boolean {
         return true
     if (event.user.name in trustableUser) // is trustable user
         return true
-    val response = client.helix.getModerators(auth.token, event.channel.id, listOf(event.user.id), null, 1).execute()
-    return response.moderators.isNotEmpty()
+    //todo
+    //val response = client.helix.getModerators(auth.token, event.channel.id, listOf(event.user.id), null, 1).execute()
+    //return response.moderators.isNotEmpty()
+    return false
 }
