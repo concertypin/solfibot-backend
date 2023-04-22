@@ -58,7 +58,7 @@ class DAOFacadeImpl : DAOFacade {
     
     override suspend fun editUser(uid: String, streamerData: StreamerData, listenerData: ListenerData)=editUser(uid.toInt(),streamerData,listenerData)
     
-    override suspend fun selectUsersVia(query:SqlExpressionBuilder.()->Op<Boolean>): List<UserData> = dbQuery {
+    override suspend fun selectUsersVia(query: SqlExpressionBuilder.() -> Op<Boolean>): List<UserData> = dbQuery {
         UserDataTable.select(query)
             .map(::resultRowToUserData)
             .map(EncodedUserData::decode)
@@ -68,7 +68,21 @@ class DAOFacadeImpl : DAOFacade {
         UserDataTable.deleteWhere { UserDataTable.uid eq uid } > 0
     }
     
-    override suspend fun deleteUser(uid: String)=deleteUser(uid.toInt())
+    override suspend fun deleteUser(uid: String) = deleteUser(uid.toInt())
+    
+    override suspend fun queryRawStringInStreamerData(query: String): List<StreamerData> = dbQuery {
+        UserDataTable.select { UserDataTable.streamerData like query }
+            .map(::resultRowToUserData)
+            .map(EncodedUserData::decode)
+            .map(UserData::streamerData)
+    }
+    
+    override suspend fun queryRawStringInListenerData(query: String): List<ListenerData> = dbQuery {
+        UserDataTable.select { UserDataTable.listenerData like query }
+            .map(::resultRowToUserData)
+            .map(EncodedUserData::decode)
+            .map(UserData::listenerData)
+    }
 }
 
 val dao: DAOFacade = DAOFacadeImpl()
