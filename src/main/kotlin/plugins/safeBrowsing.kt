@@ -15,6 +15,7 @@ import kotlinx.serialization.json.Json
 import models.safeBrowsing.*
 import models.twitch.Plugin
 import models.userData.decode
+import java.net.URI
 
 val safeBrowsingPluginIndex = listOf(Plugin(SafeBrowsing::checkFromChat))
 val URLRegex = "([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?".toRegex()
@@ -56,7 +57,13 @@ object SafeBrowsing {
         }
     }
     
-    private fun isURL(message: String): Sequence<MatchResult> = URLRegex.findAll(message)
+    private fun isURL(message: String): Sequence<String> = URLRegex.findAll(message).map { it.value }
+    
+    private fun parseURL(url:String):String
+    {
+        val uri= URI(url)
+        return "http://${uri.host?:""}${uri.path}"
+    }
     
     fun checkFromChat(client: TwitchClient, event: ChannelMessageEvent): Boolean {
         val isEnabled =
@@ -64,7 +71,7 @@ object SafeBrowsing {
         if (!isEnabled)
             return true
         for (url in isURL(event.message)) {
-            val response = isURLSafe(url.value)
+            val response = isURLSafe(parseURL(url))
             if (response != null) {
                 print(response)
                 client.chat.sendMessage(event.channel.name, "위험한 사이트 같아요! 조심하세요! 사이트 분류는 ${response}라고 해요!")
