@@ -12,8 +12,6 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4-native-mt")
     implementation("com.google.guava:guava:31.1-jre")
     
@@ -40,10 +38,6 @@ dependencies {
 }
 application {
     mainClass.set("MainKt")
-}
-
-tasks.named<Test>("test") {
-    useJUnitPlatform()
 }
 
 tasks.jar {
