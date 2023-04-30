@@ -9,8 +9,8 @@ import settings.joinUsername
 import settings.prefix
 
 
-fun main() {
-    val chatbot = Chatbot(prefix, auth)
+suspend fun main() {
+    Chatbot.setup(prefix, auth)
     
     dao.DatabaseFactory.init()
     Chatbot.attachCommands(etcIndex, cmdIndex, scoreIndex, safeBrowsingIndex)

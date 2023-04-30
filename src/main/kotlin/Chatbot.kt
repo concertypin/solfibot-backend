@@ -1,9 +1,13 @@
+import api.module
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.philippheuer.events4j.reactor.ReactorEventHandler
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.events.ChannelGoOfflineEvent
+import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
 import models.twitch.AuthToken
 import models.twitch.Command
@@ -75,22 +79,22 @@ object Chatbot {
             result.forEach { it.trim() }
             return result
         }
-    
+        
         val command = rawCommand.slice(prefix.length until rawCommand.length).parseViaIndicator()
-    
+        
         command.forEach {
             if (it.startsWith("/"))
                 return "슬래시(/)로 시작하는 명령어는 입력할 수 없습니다."
         }
-    
+        
         val cmdObj = commandsMap[command[0]] ?: return null
-    
+        
         if (cmdObj.requiredParams > command.size - 1)
             return null
         if (cmdObj.isAdminCommand)
             if (!isSudoers(event))
                 return null
-    
+        
         if (cmdObj.suspendFunction != null && cmdObj.function != null) // only one func
         {
             logger.error("Command ${cmdObj.name} doesn't have function OR suspendFunction.")
@@ -99,9 +103,9 @@ object Chatbot {
         if (cmdObj.suspendFunction == null && cmdObj.function == null) {
             logger.error("Command ${cmdObj.name} doesn't have any function.")
         }
-    
-        return try {
         
+        return try {
+            
             if (cmdObj.function != null)
                 cmdObj.function.invoke(twitchClient, event, command.subList(1, command.size))
             else if (cmdObj.suspendFunction != null)
@@ -114,16 +118,15 @@ object Chatbot {
                 }
             else
                 throw Exception("이거 왜 호출됨?")
-        
+            
         } catch (e: Exception) {
             logger.error(e.stackTraceToString())
             null
         }
     }
     
-    fun run(username:Set<String>)
-    {
-    
+    fun run(username:Set<String>) {
+        
         for(i in username)
             twitchClient.chat.joinChannel(i)
         
@@ -134,7 +137,7 @@ object Chatbot {
         twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
             if (event.user.id == auth.userID)
                 return@onEvent
-    
+            
             for (i in pluginMap)
                 try {
                     val response = i.function.invoke(twitchClient, event)
@@ -144,13 +147,17 @@ object Chatbot {
                     }
                 } finally {
                 }
-    
+            
             val response = parseCommand(event)
             if (response != null) {
                 logger.info("${event.message} -> $response on ${event.channel.name}")
                 twitchClient.chat.sendMessage(event.channel.name, response)
             }
         }
+    }
+    
+    suspend fun startAPI() {
+        embeddedServer(Netty, port = settings.port, host = "0.0.0.0", module = Application::module).start(wait = true)
     }
 }
 
