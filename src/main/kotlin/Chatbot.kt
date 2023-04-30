@@ -15,19 +15,23 @@ import kotlin.system.exitProcess
 
 const val COMMAND_INDICATOR='`'
 
-class Chatbot(private val prefix: String, credential: AuthToken) {
+object Chatbot {
     private val logger = LoggerFactory.getLogger(Chatbot::class.java)
-    private val twitchClient: TwitchClient = TwitchClientBuilder.builder()
-        .withDefaultEventHandler(ReactorEventHandler::class.java)
-        .withEnableHelix(true)
-        .withEnableChat(true)
-        .withDefaultAuthToken(OAuth2Credential(credential.clientID, credential.token))
-        .withClientId(credential.clientID)
-        .withChatAccount(OAuth2Credential(credential.clientID, credential.token))
-        .withFeignLogLevel(feign.Logger.Level.HEADERS)
-        .build()
+    lateinit var twitchClient: TwitchClient
+    private lateinit var prefix: String
     
-    init {
+    fun setup(commandPrefix: String, credential: AuthToken) {
+        prefix = commandPrefix
+        twitchClient = TwitchClientBuilder.builder()
+            .withDefaultEventHandler(ReactorEventHandler::class.java)
+            .withEnableHelix(true)
+            .withEnableChat(true)
+            .withDefaultAuthToken(OAuth2Credential(credential.clientID, credential.token))
+            .withClientId(credential.clientID)
+            .withChatAccount(OAuth2Credential(credential.clientID, credential.token))
+            .withFeignLogLevel(feign.Logger.Level.HEADERS)
+            .build()
+        
         val me = twitchClient.helix.getUsers(null, null, null).execute().users[0]
         auth.username = me.login
         auth.userID = me.id
@@ -84,7 +88,7 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
         if (cmdObj.requiredParams > command.size - 1)
             return null
         if (cmdObj.isAdminCommand)
-            if (!isSudoers(twitchClient, event))
+            if (!isSudoers(event))
                 return null
     
         if (cmdObj.suspendFunction != null && cmdObj.function != null) // only one func
@@ -150,13 +154,9 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
     }
 }
 
-fun isSudoers(client: TwitchClient, event: ChannelMessageEvent): Boolean {
+fun isSudoers(event: ChannelMessageEvent): Boolean {
     if (event.channel.id == event.user.id) // is broadcaster
         return true
-    if (event.user.name in trustableUser) // is trustable user
-        return true
-    //todo
-    //val response = client.helix.getModerators(auth.token, event.channel.id, listOf(event.user.id), null, 1).execute()
-    //return response.moderators.isNotEmpty()
-    return false
+    
+    return event.user.name in trustableUser // is trustable user
 }

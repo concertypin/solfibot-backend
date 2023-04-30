@@ -13,7 +13,8 @@ fun main() {
     val chatbot = Chatbot(prefix, auth)
     
     dao.DatabaseFactory.init()
-    chatbot.attachCommands(etcIndex, cmdIndex, scoreIndex, safeBrowsingIndex)
-    chatbot.attachPlugins(cmdPluginIndex, safeBrowsingPluginIndex)
-    chatbot.run(joinUsername)
+    Chatbot.attachCommands(etcIndex, cmdIndex, scoreIndex, safeBrowsingIndex)
+    Chatbot.attachPlugins(cmdPluginIndex, safeBrowsingPluginIndex)
+    Chatbot.run(joinUsername)
+    Chatbot.startAPI()
 }

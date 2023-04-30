@@ -24,7 +24,7 @@ fun score(client:TwitchClient,event:ChannelMessageEvent,args:List<String>):Strin
         }
     }
     
-    if(!isSudoers(client,event) || args.isEmpty()) //self-listing by normal user or sudoers(no args)
+    if (!isSudoers(event) || args.isEmpty()) //self-listing by normal user or sudoers(no args)
         return "${event.user.name}님의 학점은 ${lookup(event.user.id)}이에요!"
     
     val targetUid = args[0].usernameToUID(client) ?: return "사용자가 존재하지 않아요!"
