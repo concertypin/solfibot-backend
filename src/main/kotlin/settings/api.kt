@@ -1,3 +1,3 @@
 package settings
 
-const val port = 8080
+val port: Int? = System.getenv("API_SERVER_PORT")?.toInt()

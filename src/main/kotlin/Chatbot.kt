@@ -157,7 +157,12 @@ object Chatbot {
     }
     
     fun startAPI() {
-        embeddedServer(Netty, port = settings.port, host = "0.0.0.0", module = Application::module).start(wait = true)
+        embeddedServer(
+            Netty,
+            port = settings.port ?: return,
+            host = "0.0.0.0",
+            module = Application::module
+        ).start(wait = true)
     }
 }
 

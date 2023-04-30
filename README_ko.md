@@ -1,10 +1,11 @@
-실행법
-===
+[English document/영어 문서](README.md)
 
-요구사항
----
+# 실행법
+
+## 요구사항
+
 - Docker Compose
-- .env 파일을 통한 환경 변수 
+- .env 파일을 통한 환경 변수
     - `TWITCH_ACCESS_TOKEN` : [트위치 토큰](https://twitchtokengenerator.com/quick/qONuuotkyB) (필수
       스코프:`user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
     - `TWITCH_CLIENT_ID` : Twitch 토큰의 Client ID. 생략할 수 있습니다. 기본값은 `gp762nuuoqcoxypju8c569th9wz7q5`
@@ -16,12 +17,16 @@
     - `MAX_CHANCE` : 러시안 룰렛의 제한을 설정합니다. 만약 존재하지 않을 경우, 9999로 설정됩니다. 만약 자연수일 경우, 한 유저가 MAX_CHANCE만큼 타임아웃 된 후에는 더 이상 `룰렛`
       명령어를 이용할 수 없습니다.`
     - `DB_PATH` : DB가 저장될 경로. 빈 폴더를 권장합니다.
+    - `API_SERVER_PORT` : API 서버를 열 포트. 주어지지 않는다면, API 서버가 열리지 않습니다,
 
-실행법
----
+# 명령어
 
 - `example.env` 파일의 `<>`를 채우고, 파일명을 `.env`으로 변경하세요.
 - `docker compose up`으로 시작하세요.
+
+# 사용법
+
+## 명령어
 
 - 기본 명령어
     - 모든 기본 명령어는 `PREFIX` 환경 변수로 지정된 접두사와 같이 입력되어야 합니다.
@@ -42,3 +47,7 @@
         - 관리자인 유저가 user 인자와 함께 실행할 경우, user의 학점을 출력합니다.
         - 관리자인 유저가 user와 offset 인자와 함께 실행할 경우, user의 학점에 offset을 더합니다.
     - `링크검열` : Google Safe Browsing 경고를 토글합니다.
+
+## API
+
+[영어 문서](README.md)를 참조하세요.

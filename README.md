@@ -1,25 +1,28 @@
-    How to run?
-===
+[Korean document/한국어 문서](README_ko.md)
 
-Reqiurements
----
+# How to run?
+
+## Reqiurements
+
 - Docker Compose
 - Environment variables via .env file
-    - `TWITCH_ACCESS_TOKEN` : [Twitch token](https://twitchtokengenerator.com/quick/qONuuotkyB) (required scope: `user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
+    - `TWITCH_ACCESS_TOKEN` : [Twitch token](https://twitchtokengenerator.com/quick/qONuuotkyB) (required
+      scope: `user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
     - `TWITCH_CLIENT_ID` : Client ID of Twitch token. Default value is `gp762nuuoqcoxypju8c569th9wz7q5`
-     (Client ID of [twitchtokengenerator.com](http://twitchtokengenerator.com))
+      (Client ID of [twitchtokengenerator.com](http://twitchtokengenerator.com))
     - `PREFIX` : Basic command calling prefix.
     - `TRUSTABLE_USER` : comma-seperated Twitch user login ID. These users get every permission of the bot. Optional.
     - `SAFE_BROWSING` : Google Safe Browsing API key.
     - `MAX_CHANCE` : Limit of roulette chance. Default value is 9999. If a user was timeouted MAX_CHANCE times, can't
       call `룰렛` anymore.
     - `DB_PATH` : Path of DB. Empty directory is recommended.
+    - `API_SERVER_PORT` : Turn on API server in this port. Optional. If it is not given, API server will be disabled.
 
-Run
----
+# Run
 - Fill `<>` in `example.env`, and rename it to `.env`.
 - run with `docker compose up`.
 
+## Command
 - Basic command
     - Every basic command should be started with `PREFIX`.
     - `등록 <command> <response>` : Register custom command that autoresponse `<response>` when `<command>` is detected in the chat. Command is registered per channel. If `<command>` or `<response>` includes spaces, it should be covered with backtick( \` ).
@@ -39,3 +42,27 @@ Run
         - With `user` only, print user's score.
         - With both `user` and `offset`, add `offset` to user's score.
     - `링크검열` : Toggle Google Safe Browsing.
+
+## API
+
+Beta. Might be changed.
+
+- URL : `/` (root)
+    - GET : List state.
+
+```json lines
+//request : no header param or anything is required.
+//response :
+{
+  "joinedUser": [
+    //channels which are joined.
+    "solfibot"
+  ]
+}
+```
+
+### Channel
+
+- URL : `/channel/{channelName}`
+    - POST : Join {channelName}.
+    - DELETE : Leave {channelName}.
