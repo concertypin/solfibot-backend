@@ -11,30 +11,10 @@ import models.api.response.ResponseGeneralError
 import models.api.response.ResponseRoot
 
 fun Application.module() {
-    /*
-    authentication {
-        basic(name = "myauth1") {
-            realm = "Ktor Server"
-            validate { credentials ->
-                if (credentials.name == credentials.password) {
-                    UserIdPrincipal(credentials.name)
-                } else {
-                    null
-                }
-            }
-        }
-        
-        form(name = "myauth2") {
-            userParamName = "user"
-            passwordParamName = "password"
-            challenge {
-                /**/
-            }
-        }
-    }*/
     install(ContentNegotiation) {
         json()
     }
+    
     routing {
         get("/") {
             call.respond(HttpStatusCode.OK, ResponseRoot(twitchClient.chat.channels))

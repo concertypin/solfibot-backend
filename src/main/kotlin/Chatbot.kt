@@ -156,7 +156,7 @@ object Chatbot {
         }
     }
     
-    suspend fun startAPI() {
+    fun startAPI() {
         embeddedServer(Netty, port = settings.port, host = "0.0.0.0", module = Application::module).start(wait = true)
     }
 }

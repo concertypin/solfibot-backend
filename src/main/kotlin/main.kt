@@ -9,7 +9,7 @@ import settings.joinUsername
 import settings.prefix
 
 
-suspend fun main() {
+fun main() {
     Chatbot.setup(prefix, auth)
     
     dao.DatabaseFactory.init()
