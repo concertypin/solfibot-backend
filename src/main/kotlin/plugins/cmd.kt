@@ -19,10 +19,10 @@ fun pop(client: TwitchClient, event: ChannelMessageEvent):Boolean
                 response.random().let { sampledResponse ->
                     val userSpecifiedResponse=sampledResponse.split(settings.commandPermissionIndicator).let {
                         println("data: $it")
-                        if(event.user.name in settings.trustableUser)
+                        if (event.user.name in settings.trustableUser)
                             it.last()
-                        else if(isSudoers(client,event))
-                            it[if(it.size==3) 1 else 0]
+                        else if (isSudoers(event))
+                            it[if (it.size == 3) 1 else 0]
                         else
                             it.first()
                     }

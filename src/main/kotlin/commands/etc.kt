@@ -15,7 +15,7 @@ import utils.usernameToUID
 
 val etcIndex=listOf(
     Command("룰렛", 0, false, null, ::roulette),
-    Command("머리수복", 2, true, null, ::modify)
+    Command("머리수복", 1, true, null, ::modify)
 )
 
 fun ban(client: TwitchClient, event: ChannelMessageEvent,userID:String,duration:Int,reason:String="") {

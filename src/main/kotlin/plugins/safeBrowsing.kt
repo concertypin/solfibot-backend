@@ -21,8 +21,9 @@ val safeBrowsingPluginIndex = listOf(Plugin(SafeBrowsing::checkFromChat))
 val URLRegex = "([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?".toRegex()
 
 object SafeBrowsing {
-    private val endpoint="https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${settings.safeBrowsingAPIkey}"
-    private val client= HttpClient(CIO){
+    private val endpoint =
+        "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${settings.safeBrowsingAPIkey}"
+    private val client = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true
@@ -30,17 +31,17 @@ object SafeBrowsing {
             })
         }
     }
-    private val isURLSafe=utils.Cache.cached {
+    private val isURLSafe = utils.Cache.cached {
         runBlocking {
-            val rawResponse=client.post(endpoint){
+            val rawResponse = client.post(endpoint) {
                 contentType(ContentType.Application.Json)
                 setBody(
                     SafeBrowsingLookupRequest(
-                        ClientInfo("solfibot","0.0.0.0"),
+                        ClientInfo("solfibot", "0.0.0.0"),
                         ThreatInfo(
                             listOf("MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE"),
                             listOf("ANY_PLATFORM"),
-                            listOf("URL","EXECUTABLE"),
+                            listOf("URL", "EXECUTABLE"),
                             listOf(
                                 ThreatEntry(it)
                             )
@@ -48,9 +49,9 @@ object SafeBrowsing {
                     )
                 )
             }
-            val response:SafeBrowsingLookupResponse=rawResponse.body()
+            val response: SafeBrowsingLookupResponse = rawResponse.body()
             println("lookup")
-            if(response.matches?.isEmpty() != false)
+            if (response.matches?.isEmpty() != false)
                 return@runBlocking null
             
             return@runBlocking response.matches.first().threatType
@@ -59,10 +60,9 @@ object SafeBrowsing {
     
     private fun isURL(message: String): Sequence<String> = URLRegex.findAll(message).map { it.value }
     
-    private fun parseURL(url:String):String
-    {
-        val uri= URI(url)
-        return "http://${uri.host?:""}${uri.path}"
+    private fun parseURL(url: String): String {
+        val uri = URI(url)
+        return "http://${uri.host ?: ""}${uri.path}"
     }
     
     fun checkFromChat(client: TwitchClient, event: ChannelMessageEvent): Boolean {

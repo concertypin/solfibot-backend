@@ -27,6 +27,11 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     
+    //ktor server
+    implementation("io.ktor:ktor-server-core:2.3.0")
+    implementation("io.ktor:ktor-server-netty:2.3.0")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+    
     implementation("com.github.yundom:kache:1.0.5")
     
     //exposed with sqlite
@@ -34,6 +39,13 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:0.41.1")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
     implementation("org.xerial:sqlite-jdbc:3.30.1")
+    implementation("io.ktor:ktor-server-auth-jvm:2.3.0")
+    implementation("io.ktor:ktor-server-core-jvm:2.3.0")
+    implementation("io.ktor:ktor-server-auth-jwt-jvm:2.3.0")
+    
+    //test
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
     
 }
 application {
@@ -43,12 +55,3 @@ application {
 tasks.jar {
     manifest.attributes["Main-Class"] = "MainKt"
 }
-/*tasks.jar {
-    manifest.attributes["Main-Class"] = "Mainkt"
-    manifest.attributes["Class-Path"] = configurations
-        .runtimeClasspath
-        .get()
-        .joinToString(separator = " ") { file ->
-            "libs/${file.name}"
-        }
-}*/

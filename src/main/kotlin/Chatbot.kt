@@ -1,9 +1,13 @@
+import api.module
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.philippheuer.events4j.reactor.ReactorEventHandler
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.events.ChannelGoOfflineEvent
+import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
 import models.twitch.AuthToken
 import models.twitch.Command
@@ -15,19 +19,23 @@ import kotlin.system.exitProcess
 
 const val COMMAND_INDICATOR='`'
 
-class Chatbot(private val prefix: String, credential: AuthToken) {
+object Chatbot {
     private val logger = LoggerFactory.getLogger(Chatbot::class.java)
-    private val twitchClient: TwitchClient = TwitchClientBuilder.builder()
-        .withDefaultEventHandler(ReactorEventHandler::class.java)
-        .withEnableHelix(true)
-        .withEnableChat(true)
-        .withDefaultAuthToken(OAuth2Credential(credential.clientID, credential.token))
-        .withClientId(credential.clientID)
-        .withChatAccount(OAuth2Credential(credential.clientID, credential.token))
-        .withFeignLogLevel(feign.Logger.Level.HEADERS)
-        .build()
+    lateinit var twitchClient: TwitchClient
+    private lateinit var prefix: String
     
-    init {
+    fun setup(commandPrefix: String, credential: AuthToken) {
+        prefix = commandPrefix
+        twitchClient = TwitchClientBuilder.builder()
+            .withDefaultEventHandler(ReactorEventHandler::class.java)
+            .withEnableHelix(true)
+            .withEnableChat(true)
+            .withDefaultAuthToken(OAuth2Credential(credential.clientID, credential.token))
+            .withClientId(credential.clientID)
+            .withChatAccount(OAuth2Credential(credential.clientID, credential.token))
+            .withFeignLogLevel(feign.Logger.Level.HEADERS)
+            .build()
+        
         val me = twitchClient.helix.getUsers(null, null, null).execute().users[0]
         auth.username = me.login
         auth.userID = me.id
@@ -71,22 +79,22 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
             result.forEach { it.trim() }
             return result
         }
-    
+        
         val command = rawCommand.slice(prefix.length until rawCommand.length).parseViaIndicator()
-    
+        
         command.forEach {
             if (it.startsWith("/"))
                 return "슬래시(/)로 시작하는 명령어는 입력할 수 없습니다."
         }
-    
+        
         val cmdObj = commandsMap[command[0]] ?: return null
-    
+        
         if (cmdObj.requiredParams > command.size - 1)
             return null
         if (cmdObj.isAdminCommand)
-            if (!isSudoers(twitchClient, event))
+            if (!isSudoers(event))
                 return null
-    
+        
         if (cmdObj.suspendFunction != null && cmdObj.function != null) // only one func
         {
             logger.error("Command ${cmdObj.name} doesn't have function OR suspendFunction.")
@@ -95,9 +103,9 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
         if (cmdObj.suspendFunction == null && cmdObj.function == null) {
             logger.error("Command ${cmdObj.name} doesn't have any function.")
         }
-    
-        return try {
         
+        return try {
+            
             if (cmdObj.function != null)
                 cmdObj.function.invoke(twitchClient, event, command.subList(1, command.size))
             else if (cmdObj.suspendFunction != null)
@@ -110,16 +118,15 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
                 }
             else
                 throw Exception("이거 왜 호출됨?")
-        
+            
         } catch (e: Exception) {
             logger.error(e.stackTraceToString())
             null
         }
     }
     
-    fun run(username:Set<String>)
-    {
-    
+    fun run(username:Set<String>) {
+        
         for(i in username)
             twitchClient.chat.joinChannel(i)
         
@@ -130,7 +137,7 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
         twitchClient.eventManager.onEvent(ChannelMessageEvent::class.java) { event ->
             if (event.user.id == auth.userID)
                 return@onEvent
-    
+            
             for (i in pluginMap)
                 try {
                     val response = i.function.invoke(twitchClient, event)
@@ -140,7 +147,7 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
                     }
                 } finally {
                 }
-    
+            
             val response = parseCommand(event)
             if (response != null) {
                 logger.info("${event.message} -> $response on ${event.channel.name}")
@@ -148,15 +155,20 @@ class Chatbot(private val prefix: String, credential: AuthToken) {
             }
         }
     }
+    
+    fun startAPI() {
+        embeddedServer(
+            Netty,
+            port = settings.port ?: return,
+            host = "0.0.0.0",
+            module = Application::module
+        ).start(wait = true)
+    }
 }
 
-fun isSudoers(client: TwitchClient, event: ChannelMessageEvent): Boolean {
+fun isSudoers(event: ChannelMessageEvent): Boolean {
     if (event.channel.id == event.user.id) // is broadcaster
         return true
-    if (event.user.name in trustableUser) // is trustable user
-        return true
-    //todo
-    //val response = client.helix.getModerators(auth.token, event.channel.id, listOf(event.user.id), null, 1).execute()
-    //return response.moderators.isNotEmpty()
-    return false
+    
+    return event.user.name in trustableUser // is trustable user
 }
