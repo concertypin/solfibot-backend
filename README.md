@@ -1,4 +1,4 @@
-How to run?
+    How to run?
 ===
 
 Reqiurements
@@ -32,7 +32,10 @@ Run
     - `삭제 <command>` : Delete custom command.
     - `목록` : List custom command.
     - `룰렛` : 1 in 6 chance to print `탕!`, and timeout caller 10 seconds with reason `러시안 룰렛당해버린`.
+    - `머리수복 <user>` : Increase one chance of `user`.
     - `학점 [user] [offset]`
-        - Without `user` and `offset` or Called by non-moderator(both channel-specicated user and TRUSTABLE_USER), print oneself's score.
+        - Without `user` and `offset` or Called by non-moderator(both channel-specicated user and TRUSTABLE_USER), print
+          oneself's score.
         - With `user` only, print user's score.
         - With both `user` and `offset`, add `offset` to user's score.
+    - `링크검열` : Toggle Google Safe Browsing.
