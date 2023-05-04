@@ -9,3 +9,5 @@ services:
       - .env
     volumes:
       - "${DB_PATH}:/src/db"
+    ports:
+      - ${API_SERVER_PORT:-14785}:${API_SERVER_PORT:-14785}

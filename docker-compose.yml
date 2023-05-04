@@ -7,3 +7,5 @@ services:
       - .env
     volumes:
       - "${DB_PATH}:/src/db"
+    ports:
+      - ${PORT}:${PORT}

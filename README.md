@@ -6,7 +6,7 @@
 
 - Docker Compose
 - Environment variables via .env file
-    - `TWITCH_ACCESS_TOKEN` : [Twitch token](https://twitchtokengenerator.com/quick/qONuuotkyB) (required
+    - `TWITCH_TOKEN` : [Twitch token](https://twitchtokengenerator.com/quick/qONuuotkyB) (required
       scope: `user:read:email+chat:read+chat:edit+moderator:manage:banned_users+moderation:read`)
     - `TWITCH_CLIENT_ID` : Client ID of Twitch token. Default value is `gp762nuuoqcoxypju8c569th9wz7q5`
       (Client ID of [twitchtokengenerator.com](http://twitchtokengenerator.com))
@@ -17,6 +17,7 @@
       call `룰렛` anymore.
     - `DB_PATH` : Path of DB. Empty directory is recommended.
     - `API_SERVER_PORT` : Turn on API server in this port. Optional. If it is not given, API server will be disabled.
+        - Is unset, docker-compose.yml will use 14785 port as fallback, although it is unset.
 
 # Run
 - Fill `<>` in `example.env`, and rename it to `.env`.
