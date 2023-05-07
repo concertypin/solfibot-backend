@@ -36,7 +36,7 @@ suspend fun roulette(client: TwitchClient, event: ChannelMessageEvent, ignoredAr
             )
             true
         } else
-            roulette.chances <= 0
+            roulette.chances > 0
     
     if (!roulettablity) return "오늘 룰렛을 돌리기에는 머리가 너무 많이 깨졌습니다."
     
