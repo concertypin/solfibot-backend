@@ -1,24 +1,20 @@
-package dao
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
+import models.db.userData.ListenerData
+import models.db.userData.StreamerData
+import org.mongodb.kbson.BsonObjectId
+import org.mongodb.kbson.ObjectId
 
-import kotlinx.coroutines.Dispatchers
-import models.userData.UserDataTable
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.transaction
-
-object DatabaseFactory {
-    fun init() {
-        val driverClassName = "org.sqlite.JDBC"
-        val database =
-            Database.connect("jdbc:sqlite:${settings.jdbcURL}", driverClassName)
+class DatabaseUserData : RealmObject {
+    @PrimaryKey
+    var _id: ObjectId = BsonObjectId()
+    var userid: String = ""
     
-        transaction(database) {
-            SchemaUtils.create(UserDataTable)
-        }
-    }
-    
-    suspend fun <T> dbQuery(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
+    var listener: ListenerData = ListenerData()
+    var streamer: StreamerData = StreamerData()
 }
 
+val config = RealmConfiguration.create(setOf(DatabaseUserData::class))
+val realm = Realm.open(config)

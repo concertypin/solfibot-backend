@@ -1,4 +1,4 @@
-package models.safeBrowsing
+package models.http.safeBrowsing
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

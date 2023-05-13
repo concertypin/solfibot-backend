@@ -4,11 +4,11 @@ import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.helix.domain.BanUserInput
 import dao.dao
+import models.db.userData.Roulette
+import models.db.userData.data
+import models.db.userData.editRoulette
+import models.db.userData.offset
 import models.twitch.Command
-import models.userData.Roulette
-import models.userData.data
-import models.userData.editRoulette
-import models.userData.offset
 import settings.auth
 import settings.maxChance
 import utils.usernameToUID

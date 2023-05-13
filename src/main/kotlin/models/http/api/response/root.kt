@@ -1,4 +1,4 @@
-package models.api.response
+package models.http.api.response
 
 import kotlinx.serialization.Serializable
 

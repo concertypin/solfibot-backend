@@ -1,53 +1,41 @@
 package dao
 
-import dao.DatabaseFactory.dbQuery
-import kotlinx.serialization.json.Json
-import models.userData.*
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import models.db.userData.*
+import realm
 
 class DAOFacadeImpl : DAOFacade {
-    private fun resultRowToUserData(row: ResultRow) = EncodedUserData(
-        uid = row[UserDataTable.uid],
-        listenerData = row[UserDataTable.listenerData],
-        streamerData = row[UserDataTable.streamerData]
-    )
     
-    override suspend fun allUsers(): List<EncodedUserData> = dbQuery {
-        UserDataTable.selectAll().map(::resultRowToUserData)
+    override suspend fun allUsers(): List<UserData> {
+    
     }
     
-    override suspend fun user(uid: Int): EncodedUserData? = dbQuery {
-        UserDataTable.select { UserDataTable.uid eq uid }
-            .map(::resultRowToUserData)
-            .singleOrNull()
+    
+    override suspend fun user(uid: String): UserData? {
+        realm.query()
     }
     
-    override suspend fun user(uid:String) = user(uid.toInt())
-    
-    override suspend fun existUser(uid: Int): UserData {
-        val query=user(uid)
-        return if(query != null)
-            query.decode()
+    override suspend fun existUser(uid: String): UserData {
+        val query = user(uid)
+        return if (query != null)
+            query
         else {
-            addNewUser(uid, StreamerData(),ListenerData())
-            UserData(uid)
+            addNewUser(uid, StreamerData(), ListenerData())
+            UserData(uid, StreamerData(), ListenerData())
         }
     }
     
-    override suspend fun existUser(uid:String)=existUser(uid.toInt())
     
-    override suspend fun addNewUser(uid:Int, streamerData: StreamerData, listenerData: ListenerData): EncodedUserData? = dbQuery {
-        val insertStatement = UserDataTable.insert {
-            it[UserDataTable.uid] = uid
-            it[UserDataTable.streamerData] = Json.encodeToString(StreamerData.serializer(),streamerData)
-            it[UserDataTable.listenerData] = Json.encodeToString(ListenerData.serializer(), listenerData)
+    /*
+    override suspend fun addNewUser(uid:Int, streamerData: StreamerData, listenerData: ListenerData): UserData?
+    {
+        realm.write {
+        
         }
-        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToUserData)
     }
-    
-    override suspend fun addNewUser(uid: String, streamerData: StreamerData, listenerData: ListenerData)=addNewUser(uid.toInt(),streamerData,listenerData)
-    
+    */
+    override suspend fun addNewUser(uid: String, streamerData: StreamerData, listenerData: ListenerData) =
+        addNewUser(uid.toInt(), streamerData, listenerData)
+    /*
     override suspend fun editUser(uid: Int, streamerData: StreamerData, listenerData: ListenerData): Boolean = dbQuery {
         UserDataTable.update ({UserDataTable.uid eq uid}) {
             it[UserDataTable.uid]=uid
@@ -82,7 +70,8 @@ class DAOFacadeImpl : DAOFacade {
             .map(::resultRowToUserData)
             .map(EncodedUserData::decode)
             .map(UserData::listenerData)
-    }
+     }
+     */
 }
 
 val dao: DAOFacade = DAOFacadeImpl()

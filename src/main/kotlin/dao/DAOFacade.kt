@@ -1,31 +1,19 @@
 package dao
 
-import models.userData.EncodedUserData
-import models.userData.ListenerData
-import models.userData.StreamerData
-import models.userData.UserData
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SqlExpressionBuilder
+import models.db.userData.ListenerData
+import models.db.userData.StreamerData
+import models.db.userData.UserData
 
 interface DAOFacade {
-    suspend fun allUsers(): List<EncodedUserData>
+    suspend fun allUsers(): List<UserData>
     
-    suspend fun user(uid: Int): EncodedUserData?
-    suspend fun user(uid: String): EncodedUserData?
+    suspend fun user(uid: String): UserData?
     
-    suspend fun existUser(uid: Int): UserData
     suspend fun existUser(uid: String): UserData
     
-    suspend fun addNewUser(uid: Int, streamerData: StreamerData, listenerData: ListenerData): EncodedUserData?
-    suspend fun addNewUser(uid: String, streamerData: StreamerData, listenerData: ListenerData): EncodedUserData?
+    suspend fun addNewUser(uid: String, streamerData: StreamerData, listenerData: ListenerData): UserData?
     
-    suspend fun editUser(uid: Int, streamerData: StreamerData, listenerData: ListenerData): Boolean
     suspend fun editUser(uid: String, streamerData: StreamerData, listenerData: ListenerData): Boolean
     
-    suspend fun selectUsersVia(query: SqlExpressionBuilder.() -> Op<Boolean>): List<UserData>
-    
-    suspend fun deleteUser(uid: Int): Boolean
     suspend fun deleteUser(uid: String): Boolean
-    suspend fun queryRawStringInListenerData(query: String): List<ListenerData>
-    suspend fun queryRawStringInStreamerData(query: String): List<StreamerData>
 }

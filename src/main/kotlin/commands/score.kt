@@ -5,8 +5,8 @@ import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import dao.dao
 import isSudoers
 import kotlinx.coroutines.runBlocking
+import models.db.userData.decode
 import models.twitch.Command
-import models.userData.decode
 import utils.usernameToUID
 
 val scoreIndex= listOf(

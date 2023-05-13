@@ -12,9 +12,9 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import models.safeBrowsing.*
+import models.db.userData.decode
+import models.http.safeBrowsing.*
 import models.twitch.Plugin
-import models.userData.decode
 import java.net.URI
 
 val safeBrowsingPluginIndex = listOf(Plugin(SafeBrowsing::checkFromChat))
