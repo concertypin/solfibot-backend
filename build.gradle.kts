@@ -5,7 +5,6 @@ plugins {
     id("application")
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("plugin.serialization") version "1.7.0"
-    id("io.realm.kotlin") version "1.8.0"
 }
 
 repositories {
@@ -39,8 +38,8 @@ dependencies {
     implementation("com.github.yundom:kache:1.0.5")
     
     //MongoDB
-    implementation("io.realm.kotlin:library-base:1.8.0")
-    implementation("io.realm.kotlin:library-sync:1.8.0")
+    implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.9.0")
+    
     
     //test
     testImplementation("io.ktor:ktor-server-test-host:2.2.2")

@@ -5,8 +5,6 @@ import models.db.userData.StreamerData
 import models.db.userData.UserData
 
 interface DAOFacade {
-    suspend fun allUsers(): List<UserData>
-    
     suspend fun user(uid: String): UserData?
     
     suspend fun existUser(uid: String): UserData

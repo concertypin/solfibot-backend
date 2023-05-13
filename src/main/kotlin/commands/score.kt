@@ -5,21 +5,18 @@ import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import dao.dao
 import isSudoers
 import kotlinx.coroutines.runBlocking
-import models.db.userData.decode
 import models.twitch.Command
 import utils.usernameToUID
 
 val scoreIndex= listOf(
-    Command("학점", 0, false, ::score)
+    Command("학점", 0, false, null, ::score)
 )
 
 
-fun score(client:TwitchClient,event:ChannelMessageEvent,args:List<String>):String
-{
-    fun lookup(uid:String):Int
-    {
+suspend fun score(client: TwitchClient, event: ChannelMessageEvent, args: List<String>): String {
+    fun lookup(uid: String): Int {
         return runBlocking {
-            return@runBlocking dao.user(uid)?.decode()?.listenerData?.score?.get(event.channel.id.toInt()) ?: 0
+            return@runBlocking dao.user(uid)?.listenerData?.score?.get(event.channel.id) ?: 0
             //"${event.user.name}님의 학점은 ${score}이에요!"
         }
     }
@@ -34,16 +31,14 @@ fun score(client:TwitchClient,event:ChannelMessageEvent,args:List<String>):Strin
     
     else //edit
     {
-        return runBlocking {
-            val user = dao.existUser(targetUid)
-            val score = user.listenerData.score[event.channel.id.toInt()] ?: 0
-            user.listenerData.score[event.channel.id.toInt()] = score + (args[1].toIntOrNull() ?: return@runBlocking "올바르지 않은 숫자에요!")
-            dao.editUser(
-                targetUid,
-                user.streamerData,
-                user.listenerData
-            )
-            return@runBlocking "이제 ${args[0]}님의 학점은 ${score + args[1].toInt()}이에요!"
-        }
+        val user = dao.existUser(targetUid)
+        val score = user.listenerData.score[event.channel.id] ?: 0
+        user.listenerData.score[event.channel.id] = score + (args[1].toIntOrNull() ?: return "올바르지 않은 숫자에요!")
+        dao.editUser(
+            targetUid,
+            user.streamerData,
+            user.listenerData
+        )
+        return "이제 ${args[0]}님의 학점은 ${score + args[1].toInt()}이에요!"
     }
 }

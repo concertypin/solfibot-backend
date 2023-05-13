@@ -12,7 +12,6 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import models.db.userData.decode
 import models.http.safeBrowsing.*
 import models.twitch.Plugin
 import java.net.URI
@@ -67,7 +66,7 @@ object SafeBrowsing {
     
     fun checkFromChat(client: TwitchClient, event: ChannelMessageEvent): Boolean {
         val isEnabled =
-            runBlocking { dao.user(event.channel.id)?.decode()?.streamerData?.isSafeBrowsingEnabled ?: false }
+            runBlocking { dao.user(event.channel.id)?.streamerData?.isSafeBrowsingEnabled ?: false }
         if (!isEnabled)
             return true
         for (url in isURL(event.message)) {
