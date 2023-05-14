@@ -10,13 +10,14 @@ services:
     depends_on:
       - mongodb
   mongodb:
-    image: mongodb/mongodb-community-server:latest
+    image: mongo:6.0.5
     env_file:
       - .env
     volumes:
       - type: bind
         source: ./
         target: /data/db
+        read_only: false
     restart: always
     ports:
       - "27017:27017"
