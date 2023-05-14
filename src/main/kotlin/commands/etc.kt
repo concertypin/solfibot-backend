@@ -4,11 +4,11 @@ import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.helix.domain.BanUserInput
 import dao.dao
+import models.db.userData.Roulette
+import models.db.userData.data
+import models.db.userData.editRoulette
+import models.db.userData.offset
 import models.twitch.Command
-import models.userData.Roulette
-import models.userData.data
-import models.userData.editRoulette
-import models.userData.offset
 import settings.auth
 import settings.maxChance
 import utils.usernameToUID
@@ -25,10 +25,10 @@ fun ban(client: TwitchClient, event: ChannelMessageEvent,userID:String,duration:
 suspend fun roulette(client: TwitchClient, event: ChannelMessageEvent, ignoredArgs: List<String>): String {
     val roulettablity: Boolean
     val user = dao.existUser(event.user.id)
-    val roulette = user.let { it.listenerData.roulette[event.channel.id.toInt()] ?: Roulette() }
+    val roulette = user.let { it.listenerData.roulette[event.channel.id] ?: Roulette() }
     
     roulettablity =
-        if (roulette.lastEditedTime < System.currentTimeMillis() - (86_400_000L)) /*lastEditedTime < now -1day*/ {
+        if (roulette.lastEditedTime < System.currentTimeMillis() - (86_400_000L)) /* lastEditedTime < now -1day*/ {
             dao.editUser(
                 event.user.id,
                 user.streamerData,
@@ -41,7 +41,7 @@ suspend fun roulette(client: TwitchClient, event: ChannelMessageEvent, ignoredAr
     if (!roulettablity) return "오늘 룰렛을 돌리기에는 머리가 너무 많이 깨졌습니다."
     
     return if ((1..6).random() == 6) {
-        val score: Int = user.listenerData.roulette[event.channel.id.toInt()]?.combo ?: 0 // 0 if record not exist
+        val score: Int = user.listenerData.roulette[event.channel.id]?.combo ?: 0 // 0 if record not exist
         
         //writing db
         dao.editUser(
@@ -52,7 +52,7 @@ suspend fun roulette(client: TwitchClient, event: ChannelMessageEvent, ignoredAr
         ban(client, event, event.user.id, 10, "러시안 룰렛당해버린") //timeout 10s
         "${event.user.name} -> 탕! ${score}번 살아남으셨습니다!"
     } else {
-        val score: Int = (user.listenerData.roulette[event.channel.id.toInt()]?.combo ?: 0) + 1
+        val score: Int = (user.listenerData.roulette[event.channel.id]?.combo ?: 0) + 1
         dao.editUser(
             event.user.id,
             user.streamerData,
@@ -73,5 +73,5 @@ suspend fun modify(client: TwitchClient, event: ChannelMessageEvent, args: List<
         user.streamerData, //pass it without modifying
         listenerData
     )
-    return "${args[0]} 유저의 룰렛 기회는 이제 ${listenerData.roulette[event.channel.id.toInt()]?.chances}입니다!"
+    return "${args[0]} 유저의 룰렛 기회는 이제 ${listenerData.roulette[event.channel.id]?.chances}입니다!"
 }

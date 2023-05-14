@@ -21,30 +21,28 @@ dependencies {
     implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.3.5")
     
     //ktor client
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:2.2.2")
+    implementation("io.ktor:ktor-client-cio:2.2.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0-RC")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:2.2.2")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.2")
     
     //ktor server
     implementation("io.ktor:ktor-server-core:2.3.0")
     implementation("io.ktor:ktor-server-netty:2.3.0")
-    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
-    
-    implementation("com.github.yundom:kache:1.0.5")
-    
-    //exposed with sqlite
-    implementation("org.jetbrains.exposed:exposed-core:0.41.1")
-    implementation("org.jetbrains.exposed:exposed-dao:0.41.1")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
-    implementation("org.xerial:sqlite-jdbc:3.30.1")
+    implementation("io.ktor:ktor-server-content-negotiation:2.2.2")
     implementation("io.ktor:ktor-server-auth-jvm:2.3.0")
     implementation("io.ktor:ktor-server-core-jvm:2.3.0")
     implementation("io.ktor:ktor-server-auth-jwt-jvm:2.3.0")
     
+    implementation("com.github.yundom:kache:1.0.5")
+    
+    //MongoDB
+    implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.9.0")
+    
+    
     //test
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-test-host:2.2.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
     
 }

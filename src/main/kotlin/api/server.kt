@@ -7,8 +7,8 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import models.api.response.ResponseGeneralError
-import models.api.response.ResponseRoot
+import models.http.api.response.ResponseGeneralError
+import models.http.api.response.ResponseRoot
 
 fun Application.module() {
     install(ContentNegotiation) {

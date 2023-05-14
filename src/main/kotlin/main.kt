@@ -12,7 +12,6 @@ import settings.prefix
 fun main() {
     Chatbot.setup(prefix, auth)
     
-    dao.DatabaseFactory.init()
     Chatbot.attachCommands(etcIndex, cmdIndex, scoreIndex, safeBrowsingIndex)
     Chatbot.attachPlugins(cmdPluginIndex, safeBrowsingPluginIndex)
     Chatbot.run(joinUsername)
