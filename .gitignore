@@ -145,4 +145,6 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,kotlin,gradle
 
 db
+!src/main/kotlin/models/db
+
 .env
