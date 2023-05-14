@@ -7,7 +7,21 @@ services:
     restart: always
     env_file:
       - .env
-    volumes:
-      - "${DB_PATH}:/src/db"
     ports:
       - ${API_SERVER_PORT:-14785}:${API_SERVER_PORT:-14785}
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    env_file:
+      - .env
+    #environment:
+    #  - MONGODB_INITDB_ROOT_USERNAME=user
+    #  - MONGODB_INITDB_ROOT_PASSWORD=pass
+    volumes:
+      - type: bind
+        source: ./db
+        target: /data/db
+        read_only: false
+    ports:
+      - "27017:27017"
