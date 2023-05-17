@@ -28,13 +28,12 @@ suspend fun roulette(client: TwitchClient, event: ChannelMessageEvent, ignoredAr
     val roulette = user.let { it.listenerData.roulette[event.channel.id] ?: Roulette() }
     
     roulettablity =
-        if (roulette.lastEditedTime < System.currentTimeMillis() / 1000 - (86_400)) /* lastEditedTime < now -1day*/ {
+        if (roulette.lastEditedTime < (System.currentTimeMillis() / 1000).toInt() - (86_400)) /* lastEditedTime < now -1day*/ {
             dao.editUser(
                 event.user.id,
                 user.streamerData,
                 user.listenerData.editRoulette(event.channel.id, chances = maxChance.data) //recover day by day
             )
-            System.currentTimeMillis()
             true
         } else
             roulette.chances > 0
