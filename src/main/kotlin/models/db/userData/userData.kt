@@ -15,7 +15,7 @@ data class StreamerData(
 )
 
 @Serializable
-data class Roulette(var chances: Int = maxChance, var combo: Int = 0, var lastEditedTime: Long = 0)
+data class Roulette(var chances: Int = maxChance, var combo: Int = 0, var lastEditedTime: Int = 0)
 
 @Serializable
 data class ListenerData(

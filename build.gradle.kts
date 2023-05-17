@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4-native-mt")
-    implementation("com.google.guava:guava:31.1-jre")
+    //implementation("com.google.guava:guava:31.1-jre")
     
     //twitch4j
     implementation("com.github.twitch4j:twitch4j:1.13.0")
