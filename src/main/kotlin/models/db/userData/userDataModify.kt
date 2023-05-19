@@ -10,7 +10,7 @@ fun ListenerData.editRoulette(uid: String, chances: Modify = 0.offset, combo: Mo
     if ((chances.data ?: rouletteData.chances) < rouletteData.chances || (chances.offset
             ?: 1) < 0
     ) //modified chance < original chance
-        rouletteData.lastEditedTime = System.currentTimeMillis()
+        rouletteData.lastEditedTime = (System.currentTimeMillis() / 1000).toInt()
     if (chances.offset == null && chances.data != null)
         rouletteData.chances = chances.data
     else if (chances.offset != null && chances.data == null)
