@@ -1,16 +1,15 @@
 package dao
 
-import kotlinx.coroutines.reactive.awaitFirst
-import kotlinx.coroutines.reactive.awaitFirstOrNull
+import com.mongodb.client.model.Filters.eq
+import kotlinx.coroutines.flow.firstOrNull
 import models.db.userData.ListenerData
 import models.db.userData.StreamerData
 import models.db.userData.UserData
-import org.litote.kmongo.eq
 
 class DAOFacadeImpl : DAOFacade {
     override suspend fun user(uid: String): UserData? {
-        val col = database.getCollection(uid, UserData::class.java)
-        return col.find().awaitFirstOrNull()
+        val col = database.getCollection<UserData>(uid)
+        return col.find().firstOrNull()
     }
     
     override suspend fun existUser(uid: String): UserData {
@@ -24,24 +23,26 @@ class DAOFacadeImpl : DAOFacade {
     }
     
     override suspend fun addNewUser(uid: String, streamerData: StreamerData, listenerData: ListenerData): UserData? {
-        val col = database.getCollection(uid, UserData::class.java)
+        val col = database.getCollection<UserData>(uid)
         val doc = UserData(uid, streamerData, listenerData)
         
-        return if (col.insertOne(doc).awaitFirstOrNull() == null)
+        return if (col.insertOne(doc).wasAcknowledged())
             doc
         else
             null
     }
     
     override suspend fun editUser(uid: String, streamerData: StreamerData, listenerData: ListenerData): Boolean {
-        val col = database.getCollection(uid, UserData::class.java)
-        return col.replaceOne(UserData::userid eq uid, UserData(uid, streamerData, listenerData))
-            .awaitFirstOrNull() == null
+        val col = database.getCollection<UserData>(uid)
+        return col.replaceOne(
+            eq(UserData::userid.name,uid),
+            UserData(uid, streamerData, listenerData)
+        ).wasAcknowledged()
     }
     
     override suspend fun deleteUser(uid: String): Boolean {
-        val col = database.getCollection(uid, UserData::class.java)
-        col.drop().awaitFirst()
+        val col = database.getCollection<UserData>(uid)
+        col.drop()
         return true
     }
 }

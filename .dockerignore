@@ -1,4 +1,5 @@
 .gradle
+.github
 .idea
 db
 .git

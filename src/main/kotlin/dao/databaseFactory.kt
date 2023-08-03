@@ -1,8 +1,7 @@
 package dao
 
-import com.mongodb.reactivestreams.client.MongoDatabase
-import org.litote.kmongo.reactivestreams.KMongo
+import com.mongodb.kotlin.client.coroutine.MongoClient
 import settings.mongoDBconnectionURL
 
-val client = KMongo.createClient(mongoDBconnectionURL)
-val database: MongoDatabase = client.getDatabase("solfibot")
+val client = MongoClient.create(mongoDBconnectionURL)
+val database = client.getDatabase("solfibot")

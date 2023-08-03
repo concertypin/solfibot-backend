@@ -13,7 +13,6 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4-native-mt")
-    //implementation("com.google.guava:guava:31.1-jre")
     
     //twitch4j
     implementation("com.github.twitch4j:twitch4j:1.13.0")
@@ -38,12 +37,14 @@ dependencies {
     implementation("com.github.yundom:kache:1.0.5")
     
     //MongoDB
-    implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.9.0")
+    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.10.1")
     
     
     //test
+    /*
     testImplementation("io.ktor:ktor-server-test-host:2.2.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
+    */
     
 }
 application {
